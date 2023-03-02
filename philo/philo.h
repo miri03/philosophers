@@ -30,10 +30,11 @@ typedef struct s_list
 
 typedef struct s_philo
 {
-	int			philo_id;
-	int			n_philo;
-	int			current_time;
-	int			primary;
+	int				philo_id;
+	int				n_philo;
+	int				current_time;
+	int				primary;
+	pthread_mutex_t	*fork;
 	t_list		*p_list;
 }				t_prm;
 

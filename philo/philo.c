@@ -18,7 +18,8 @@ int	get_time(t_prm philo)
 	int				current_time;
 
 	gettimeofday(&fn_time, NULL);
-	current_time = (fn_time.tv_sec * 1000) - philo.primary;
+	current_time = ((fn_time.tv_usec / 1000) * 1000) - philo.primary;
+	printf("tv_time => %d\n", (fn_time.tv_usec / 1000) * 1000);
 	return (current_time);
 }
 
@@ -34,15 +35,20 @@ void	time_parm(char **argv, t_time *time, int argc, t_prm *philo)
 	if (argc == 6)
 		time->m_eat = ft_atoi(argv[5]);
 	philo->p_list = NULL;
-	philo->primary = (fn_time.tv_sec * 1000);
+	philo->primary = (fn_time.tv_usec / 1000);
+	printf("primary time=> %d\n", philo->primary);
 	philo->n_philo = ft_atoi(argv[1]);
 }
 
 void	work(t_prm *philo)
 {
 	(void) philo;
-	while (1)
-	{
+	int	i;
+
+	i = 0;
+	pthread_mutex_lock(&(philo->fork[i]));
+	printf("philo 1 has taken a fork");
+
 
 
 	printf("correct\n");
@@ -69,6 +75,26 @@ void	create_philos(t_prm *philo)
 	}
 }
 
+void	make_mutex(t_prm *philo)
+{
+	int	i;
+
+	i = 0;
+	philo->fork = malloc(sizeof(pthread_mutex_t) * philo->n_philo);
+	if (philo->fork == NULL)
+		exit(1);
+	while (i < philo->n_philo)
+	{
+		if (pthread_mutex_init(&(philo->fork[i]), NULL) == -1)
+		{
+			printf("mutex init has failed\n");
+			exit (1);
+		}
+		printf("A fork is in the table\n");
+		i++;
+	}
+}
+
 int main(int argc, char **argv)
 {
 	t_time	time;
@@ -77,21 +103,22 @@ int main(int argc, char **argv)
 	if (argc == 5 || argc == 6)
 	{
 		time_parm(argv, &time, argc, &philo);
-		printf("%d %d %d %d\n", time.die, time.eat, time.sleep, time.m_eat);
+		printf("die=>%d eat=>%d sleep=>%d m_eat=>%d\n", time.die, time.eat, time.sleep, time.m_eat);
 		create_philos(&philo);
 		philo.current_time = get_time(philo);
+		make_mutex(&philo);
 
-		/* while (1)
+		while (1)
 		{
 			philo.current_time = get_time(philo);
-			printf("%d\n", philo.current_time);
-		} */
-
-		while (philo.p_list)
-		{
-			printf("%d\n", philo.p_list->n_eat);
-			philo.p_list = philo.p_list->next;
+			//printf("%d\n", philo.current_time);
 		}
+
+		// while (philo.p_list)
+		// {
+		// 	printf("%d\n", philo.p_list->n_eat);
+		// 	philo.p_list = philo.p_list->next;
+		// }
 	}
 	else
 		ft_putstr_fd("Not enough arguments\n", 2);
