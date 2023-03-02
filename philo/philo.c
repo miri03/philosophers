@@ -6,7 +6,7 @@
 /*   By: meharit <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/27 21:05:17 by meharit           #+#    #+#             */
-/*   Updated: 2023/03/01 22:19:10 by meharit          ###   ########.fr       */
+/*   Updated: 2023/03/02 14:11:00 by meharit          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,6 +41,10 @@ void	time_parm(char **argv, t_time *time, int argc, t_prm *philo)
 void	work(t_prm *philo)
 {
 	(void) philo;
+	while (1)
+	{
+
+
 	printf("correct\n");
 }
 
