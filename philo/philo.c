@@ -6,20 +6,22 @@
 /*   By: meharit <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/27 21:05:17 by meharit           #+#    #+#             */
-/*   Updated: 2023/03/02 14:11:00 by meharit          ###   ########.fr       */
+/*   Updated: 2023/03/03 17:11:03 by meharit          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
+#include <unistd.h>
 
-int	get_time(t_prm philo)
+unsigned long long	get_time(t_prm philo)
 {
+	(void) philo;
 	struct timeval fn_time;
-	int				current_time;
+	unsigned long long				current_time;
 
 	gettimeofday(&fn_time, NULL);
-	current_time = ((fn_time.tv_usec / 1000) * 1000) - philo.primary;
-	printf("tv_time => %d\n", (fn_time.tv_usec / 1000) * 1000);
+	current_time = (fn_time.tv_sec) + (fn_time.tv_usec / 1000);
+//	printf("%llu	%llu\n", current_time, philo.primary);
 	return (current_time);
 }
 
@@ -35,23 +37,24 @@ void	time_parm(char **argv, t_time *time, int argc, t_prm *philo)
 	if (argc == 6)
 		time->m_eat = ft_atoi(argv[5]);
 	philo->p_list = NULL;
-	philo->primary = (fn_time.tv_usec / 1000);
-	printf("primary time=> %d\n", philo->primary);
+	philo->primary = (fn_time.tv_sec) + (fn_time.tv_usec / 1000);
+	// printf("primary time=> %d\n", philo->primary);
 	philo->n_philo = ft_atoi(argv[1]);
 }
 
 void	work(t_prm *philo)
 {
 	(void) philo;
-	int	i;
+	/* int	i;
 
 	i = 0;
-	pthread_mutex_lock(&(philo->fork[i]));
-	printf("philo 1 has taken a fork");
+	while (1)
+	{
+		pthread_mutex_lock(&(philo->fork[i]));
+		printf("%ul ms :: philo 1 has taken a fork", get_time());
+	}
 
-
-
-	printf("correct\n");
+	printf("correct\n"); */
 }
 
 void	create_philos(t_prm *philo)
@@ -95,10 +98,13 @@ void	make_mutex(t_prm *philo)
 	}
 }
 
+#include <limits.h>
+
 int main(int argc, char **argv)
 {
 	t_time	time;
 	t_prm	philo;
+	//size_t		i = 0;
 
 	if (argc == 5 || argc == 6)
 	{
@@ -107,11 +113,15 @@ int main(int argc, char **argv)
 		create_philos(&philo);
 		philo.current_time = get_time(philo);
 		make_mutex(&philo);
-
-		while (1)
+	
+		while (philo.current_time - philo.primary < philo.primary)
 		{
 			philo.current_time = get_time(philo);
-			//printf("%d\n", philo.current_time);
+//			printf("TIME => %d\n", philo.current_time - philo.primary);
+//			philo.current_time = get_time(philo);
+			printf("TIME => %llu \n", philo.current_time - philo.primary);
+//			usleep(1/1000000);
+		//	i++;
 		}
 
 		// while (philo.p_list)

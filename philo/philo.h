@@ -6,7 +6,7 @@
 /*   By: meharit <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/27 21:07:34 by meharit           #+#    #+#             */
-/*   Updated: 2023/03/01 22:16:37 by meharit          ###   ########.fr       */
+/*   Updated: 2023/03/03 16:42:47 by meharit          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,7 @@ typedef struct s_philo
 	int				philo_id;
 	int				n_philo;
 	int				current_time;
-	int				primary;
+	unsigned long long				primary;
 	pthread_mutex_t	*fork;
 	t_list		*p_list;
 }				t_prm;
