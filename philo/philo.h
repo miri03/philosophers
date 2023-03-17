@@ -6,7 +6,7 @@
 /*   By: meharit <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/27 21:07:34 by meharit           #+#    #+#             */
-/*   Updated: 2023/03/03 16:42:47 by meharit          ###   ########.fr       */
+/*   Updated: 2023/03/17 17:06:15 by meharit          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,23 +19,34 @@
 # include <sys/time.h>
 #include <unistd.h>
 
+//////////////////////////////////////////
 typedef struct s_list
 {
 	int				id;
-	int				n_eat;
+	int				n_eat;			// remove it
+
 	pthread_t		thread_id;
 	struct s_list	*next;
 
 }				t_list;
+//////////////////////////////////////
 
 typedef struct s_philo
 {
+	int				id;
 	int				philo_id;
 	int				n_philo;
 	int				current_time;
 	unsigned long long				primary;
 	pthread_mutex_t	*fork;
-	t_list		*p_list;
+
+	int				die;
+	int				eat;
+	int				sleep;
+	int				m_eat;
+
+
+//	t_list		*p_list;          // remove it
 }				t_prm;
 
 typedef struct s_time

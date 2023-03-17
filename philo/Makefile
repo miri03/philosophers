@@ -6,7 +6,7 @@
 #    By: meharit <marvin@42.fr>                     +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/03/01 14:28:00 by meharit           #+#    #+#              #
-#    Updated: 2023/03/01 21:55:03 by meharit          ###   ########.fr        #
+#    Updated: 2023/03/16 23:07:18 by meharit          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -26,7 +26,7 @@ OFILES = philo.o \
 all: $(NAME)
 
 $(NAME) : $(OFILES)
-	cc -lpthread -fsanitize=address -g $(CFLAGS) $(OFILES) -o $(NAME)
+	cc -lpthread -fsanitize=thread -g $(CFLAGS) $(OFILES) -o $(NAME)
 
 clean:
 	$(RM) $(OFILES)

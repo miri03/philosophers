@@ -6,12 +6,12 @@
 /*   By: meharit <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/27 21:05:17 by meharit           #+#    #+#             */
-/*   Updated: 2023/03/03 17:11:03 by meharit          ###   ########.fr       */
+/*   Updated: 2023/03/17 23:57:15 by meharit          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
-#include <unistd.h>
+#include <pthread.h>
 
 unsigned long long	get_time(t_prm philo)
 {
@@ -34,48 +34,19 @@ void	time_parm(char **argv, t_time *time, int argc, t_prm *philo)
 	time->die = ft_atoi(argv[2]);
 	time->eat = ft_atoi(argv[3]);
 	time->sleep = ft_atoi(argv[4]);
+
+	philo->m_eat = 0;
+	philo->die = ft_atoi(argv[2]);
+	philo->eat = ft_atoi(argv[3]);
+	philo->sleep = ft_atoi(argv[4]);
+
 	if (argc == 6)
 		time->m_eat = ft_atoi(argv[5]);
-	philo->p_list = NULL;
+//	philo->p_list = NULL;
 	philo->primary = (fn_time.tv_sec) + (fn_time.tv_usec / 1000);
 	// printf("primary time=> %d\n", philo->primary);
 	philo->n_philo = ft_atoi(argv[1]);
-}
-
-void	work(t_prm *philo)
-{
-	(void) philo;
-	/* int	i;
-
-	i = 0;
-	while (1)
-	{
-		pthread_mutex_lock(&(philo->fork[i]));
-		printf("%ul ms :: philo 1 has taken a fork", get_time());
-	}
-
-	printf("correct\n"); */
-}
-
-void	create_philos(t_prm *philo)
-{
-	pthread_t	thread_id[philo->n_philo];
-	int			i;
-	int			rc;
-
-	i = 1;
-	while (i <= philo->n_philo)
-	{
-		rc = pthread_create(&thread_id[i-1], NULL, (void*)work, philo);
-		if(rc == -1)
-		{
-			perror("pthread");
-			exit(1);
-		}
-		ft_lstadd_back(&(philo->p_list), ft_lstnew(i));
-		philo->p_list->thread_id = thread_id[i-1];
-		i++;
-	}
+	philo->philo_id = 1;
 }
 
 void	make_mutex(t_prm *philo)
@@ -93,12 +64,48 @@ void	make_mutex(t_prm *philo)
 			printf("mutex init has failed\n");
 			exit (1);
 		}
-		printf("A fork is in the table\n");
+		printf("forks ========> %d\n", i);
+		i++;
+	}
+	printf("\n");
+}
+
+void	work(t_prm *philo)				// problem in forks goes to a non existing fork 
+{
+	if (philo->philo_id % 2 != 0)
+	{
+		pthread_mutex_lock(&(philo->fork[(philo->philo_id) - 1]));
+		printf("philo %d has taken the fork %d \n", philo->philo_id, philo->philo_id - 1);
+
+		pthread_mutex_lock(&(philo->fork[philo->philo_id]));
+		printf("philo %d has taken the fork %d\n", philo->philo_id, philo->philo_id);
+
+		printf("philo %d is eating\n", philo->philo_id);
+		usleep(philo->eat * 1000);
+		printf("\n");
+		pthread_mutex_unlock(&(philo->fork[(philo->philo_id) - 1]));
+		pthread_mutex_unlock(&(philo->fork[philo->philo_id]));
+	}
+	(philo->philo_id)++;
+}
+
+void	create_philos(t_prm *philo)
+{
+	pthread_t	thread_id[philo->n_philo];
+	int			i;
+
+	i = 1;
+	while (i <= philo->n_philo)
+	{
+		if (pthread_create(&thread_id[i-1], NULL, (void*)work, philo) == -1)
+		{
+			perror("pthread");
+			exit(1);
+		}
+		pthread_join(thread_id[i-1], NULL);
 		i++;
 	}
 }
-
-#include <limits.h>
 
 int main(int argc, char **argv)
 {
@@ -110,26 +117,17 @@ int main(int argc, char **argv)
 	{
 		time_parm(argv, &time, argc, &philo);
 		printf("die=>%d eat=>%d sleep=>%d m_eat=>%d\n", time.die, time.eat, time.sleep, time.m_eat);
+		make_mutex(&philo);
 		create_philos(&philo);
 		philo.current_time = get_time(philo);
-		make_mutex(&philo);
 	
-		while (philo.current_time - philo.primary < philo.primary)
+		/* while (philo.current_time - philo.primary < philo.primary)
 		{
 			philo.current_time = get_time(philo);
-//			printf("TIME => %d\n", philo.current_time - philo.primary);
-//			philo.current_time = get_time(philo);
 			printf("TIME => %llu \n", philo.current_time - philo.primary);
-//			usleep(1/1000000);
-		//	i++;
-		}
-
-		// while (philo.p_list)
-		// {
-		// 	printf("%d\n", philo.p_list->n_eat);
-		// 	philo.p_list = philo.p_list->next;
-		// }
+		} */
 	}
+	
 	else
 		ft_putstr_fd("Not enough arguments\n", 2);
 }
