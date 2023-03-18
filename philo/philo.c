@@ -6,12 +6,14 @@
 /*   By: meharit <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/27 21:05:17 by meharit           #+#    #+#             */
-/*   Updated: 2023/03/17 23:57:15 by meharit          ###   ########.fr       */
+/*   Updated: 2023/03/18 21:57:28 by meharit          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
 #include <pthread.h>
+#include <stdio.h>
+#include <unistd.h>
 
 unsigned long long	get_time(t_prm philo)
 {
@@ -42,7 +44,6 @@ void	time_parm(char **argv, t_time *time, int argc, t_prm *philo)
 
 	if (argc == 6)
 		time->m_eat = ft_atoi(argv[5]);
-//	philo->p_list = NULL;
 	philo->primary = (fn_time.tv_sec) + (fn_time.tv_usec / 1000);
 	// printf("primary time=> %d\n", philo->primary);
 	philo->n_philo = ft_atoi(argv[1]);
@@ -57,6 +58,7 @@ void	make_mutex(t_prm *philo)
 	philo->fork = malloc(sizeof(pthread_mutex_t) * philo->n_philo);
 	if (philo->fork == NULL)
 		exit(1);
+	printf("\n");
 	while (i < philo->n_philo)
 	{
 		if (pthread_mutex_init(&(philo->fork[i]), NULL) == -1)
@@ -64,29 +66,62 @@ void	make_mutex(t_prm *philo)
 			printf("mutex init has failed\n");
 			exit (1);
 		}
-		printf("forks ========> %d\n", i);
+		printf("forks ========> %d\n", i+1);
 		i++;
 	}
 	printf("\n");
 }
 
-void	work(t_prm *philo)				// problem in forks goes to a non existing fork 
+void	work(t_prm *philo)				// problem in forks 
 {
-	if (philo->philo_id % 2 != 0)
+	int	fork;
+
+
+	 if (philo->philo_id % 2 == 0)
+		usleep(100);
+
+	fork = philo->philo_id - 1;
+	while (1)
 	{
-		pthread_mutex_lock(&(philo->fork[(philo->philo_id) - 1]));
-		printf("philo %d has taken the fork %d \n", philo->philo_id, philo->philo_id - 1);
+		if (pthread_mutex_lock(&(philo->fork[fork])) == 0)
+			printf("philo %d has taken the fork %d \n", philo->philo_id, fork);
+		else
+		 printf("------------failed to take a fork\n");
 
-		pthread_mutex_lock(&(philo->fork[philo->philo_id]));
-		printf("philo %d has taken the fork %d\n", philo->philo_id, philo->philo_id);
+		if (pthread_mutex_lock(&(philo->fork[fork + 1])) == 0)
+		{
+			printf("philo %d has taken the fork %d\n", philo->philo_id, fork);
+			printf("philo %d is eating\n", philo->philo_id);
+		}
+		else
+		 printf("------?------failed to take a fork\n");
 
-		printf("philo %d is eating\n", philo->philo_id);
 		usleep(philo->eat * 1000);
+		printf("philo %d finished eating\n", philo->philo_id); 
 		printf("\n");
-		pthread_mutex_unlock(&(philo->fork[(philo->philo_id) - 1]));
-		pthread_mutex_unlock(&(philo->fork[philo->philo_id]));
+
+		if (pthread_mutex_unlock(&(philo->fork[fork])))
+			printf("1 unlock failed\n");
+		else
+			printf("fork %d is in the table\n\n", fork);           //////////
+		if (philo->philo_id < philo->n_philo)
+		{
+			if (pthread_mutex_unlock(&(philo->fork[fork + 1])))
+				printf("2 unlock failed\n");
+			else
+				printf("fork %d is in the table\n\n", fork + 1);      ////////////
+		}
+		if (philo->philo_id == philo->n_philo)
+		{
+			fork = 0;
+			philo->philo_id = 1;
+		}
+		else
+		{
+			(philo->philo_id)++;
+			fork = philo->philo_id;
+		}
 	}
-	(philo->philo_id)++;
 }
 
 void	create_philos(t_prm *philo)
