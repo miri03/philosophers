@@ -6,16 +6,13 @@
 /*   By: meharit <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/27 21:05:17 by meharit           #+#    #+#             */
-/*   Updated: 2023/03/19 22:18:56 by meharit          ###   ########.fr       */
+/*   Updated: 2023/03/20 18:37:48 by meharit          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
 #include <pthread.h>
 #include <stdio.h>
-#include <unistd.h>
-
-//int i;
 
 unsigned long long	get_time(t_prm philo)
 {
@@ -76,116 +73,56 @@ void	make_mutex(t_prm *philo)
 
 void	work(t_prm *philo)				// problem in forks 
 {
-	int	fork;
-	int	i = 0;
-	// int y;
-
-	 if (philo->philo_id % 2 == 0)
-		usleep(1500);
-
-	fork = philo->philo_id - 1;
-//	printf("FIRST\n");
-	while (1)
-	{
-/*take*/
-		if (pthread_mutex_lock(&(philo->fork[fork])) == 0)
-		{
-			i++;
-			printf("philo %d has taken the fork %d \n", philo->philo_id, fork);
-		}
+	/* if (philo->philo_id % 2 == 0)
+		 usleep(1500); */
+	printf("%d\n", philo->philo_id);
+/*
+	// while (1)
+	// {
+		if (pthread_mutex_lock(&(philo->fork[philo->philo_id - 1])) == 0)
+			printf("philo %d has taken the fork %d \n", philo->philo_id, philo->philo_id - 1);
 		else
 		 printf("------------failed to take a fork\n");
 
-/*take*/	
-		if (pthread_mutex_lock(&(philo->fork[fork + 1])) == 0)
-		{
-			printf("philo %d has taken the fork %d\n", philo->philo_id, fork + 1);
-			i++;
-			if (i == 2)
-			{
-				i = 0;
-				printf("philo %d is eating\n", philo->philo_id);
-			}
-		}
-		else if (philo->philo_id == philo->n_philo)
-		{
-			fork = 0;
-/*take*/  
-			if (pthread_mutex_lock(&(philo->fork[fork])) == 0)
-			{
-				i++;
-				printf("philo %d has taken the fork %d\n", philo->philo_id, fork);
-				if (i == 2)
-				{
-					i = 0;
-					printf("philo %d is eating\n", philo->philo_id);
-				}
-			}
-			else
-				printf("------?------failed to take a fork\n");
-		}
+		if (pthread_mutex_lock(&(philo->fork[philo->philo_id])) == 0)
+			printf("philo %d has taken the fork %d\n", philo->philo_id, philo->philo_id);
+		printf("philo %d is eating\n", philo->philo_id);
 
 		usleep(philo->eat * 1000);
-//		if (y == 2)
 		printf("\nphilo %d finished eating\n", philo->philo_id);
-	printf("\nphilo %d is sleeping\n", philo->philo_id);
-	usleep(philo->sleep * 1000);
 
-/*put*/		
-		if (pthread_mutex_unlock(&(philo->fork[fork])))
+		// printf("\nphilo %d is sleeping\n", philo->philo_id);
+		// usleep(philo->sleep * 1000);
+
+
+		if (pthread_mutex_unlock(&(philo->fork[philo->philo_id - 1])))
 				printf("1 unlock failed\n");
 		else
-			printf("fork %d is in the table\n", fork);
-/*put*/
-		if (philo->philo_id == philo->n_philo)
-		{
-			if (pthread_mutex_unlock(&(philo->fork[philo->n_philo - 1])))
-				printf("2 unlock failed\n");
-			else
-				printf("fork %d is in the table\n", philo->n_philo - 1);
-		}
-		else {
-/*put*/			
-			if (pthread_mutex_unlock(&(philo->fork[fork + 1])))
-				printf("2 unlock failed\n");
-			else
-				printf("fork %d is in the table\n\n", fork + 1);
-
-		}
+			printf("fork %d is in the table\n", philo->philo_id - 1);
+		
 		if (philo->philo_id ==  philo->n_philo)
 			philo->philo_id = 1;
 		else
-		{
 			(philo->philo_id)++;
-			fork = philo->philo_id - 1;
-		}
-	}
+	// } */
 }
 
 void	create_philos(t_prm *philo)
 {
 	pthread_t	thread_id[philo->n_philo];
-	int			i;
 
-	i = 1;
-	while (i <= philo->n_philo)
+	while (philo->philo_id <= philo->n_philo)
 	{
-		if (pthread_create(&thread_id[i-1], NULL, (void*)work, philo) == -1)
+		if (pthread_create(&thread_id[philo->philo_id - 1], NULL, (void*)work, philo) == -1)
 		{
 			perror("pthread");
 			exit(1);
 		}
-		 if (pthread_detach(thread_id[i-1]))
-			 printf("---------------------------------detach fail\n");
-		i++;
+		printf("hola\n");
+		if (pthread_detach(thread_id[philo->philo_id - 1]))
+			printf("---------------------------------detach fail\n");
+		philo->philo_id++;
 	}
-	/* i = 1;
-	while (i <= philo->n_philo)
-	{
-		if (pthread_join(thread_id[i-1], NULL))
-			printf("join fail\n");
-		i++;
-	} */
 }
 
 int main(int argc, char **argv)
