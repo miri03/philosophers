@@ -6,31 +6,23 @@
 /*   By: meharit <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/27 21:05:17 by meharit           #+#    #+#             */
-/*   Updated: 2023/03/20 18:37:48 by meharit          ###   ########.fr       */
+/*   Updated: 2023/03/22 00:56:41 by meharit          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
 #include <pthread.h>
 #include <stdio.h>
-
-unsigned long long	get_time(t_prm philo)
-{
-	(void) philo;
-	struct timeval fn_time;
-	unsigned long long				current_time;
-
-	gettimeofday(&fn_time, NULL);
-	current_time = (fn_time.tv_sec) + (fn_time.tv_usec / 1000);
-//	printf("%llu	%llu\n", current_time, philo.primary);
-	return (current_time);
-}
+#include <sys/_types/_timeval.h>
+#include <sys/time.h>
 
 void	time_parm(char **argv, t_time *time, int argc, t_prm *philo)
 {
-	struct timeval fn_time;
+	// struct timeval fn_time;
 
-	gettimeofday(&fn_time, NULL);
+	gettimeofday(philo->tp, NULL);
+
+//	gettimeofday(&fn_time, NULL);
 	time->m_eat = 0;
 	time->die = ft_atoi(argv[2]);
 	time->eat = ft_atoi(argv[3]);
@@ -43,8 +35,6 @@ void	time_parm(char **argv, t_time *time, int argc, t_prm *philo)
 
 	if (argc == 6)
 		time->m_eat = ft_atoi(argv[5]);
-	philo->primary = (fn_time.tv_sec) + (fn_time.tv_usec / 1000);
-	// printf("primary time=> %d\n", philo->primary);
 	philo->n_philo = ft_atoi(argv[1]);
 	philo->philo_id = 1;
 }
@@ -73,12 +63,15 @@ void	make_mutex(t_prm *philo)
 
 void	work(t_prm *philo)				// problem in forks 
 {
-	/* if (philo->philo_id % 2 == 0)
-		 usleep(1500); */
+	// pthread_mutex_t	printf_mut;
+	if (philo->philo_id % 2 == 0)
+		 usleep(1500);
+	/* pthread_mutex_lock(&printf_mut);
 	printf("%d\n", philo->philo_id);
-/*
-	// while (1)
-	// {
+	pthread_mutex_unlock(&printf_mut); */
+
+	/* while (1)
+	{
 		if (pthread_mutex_lock(&(philo->fork[philo->philo_id - 1])) == 0)
 			printf("philo %d has taken the fork %d \n", philo->philo_id, philo->philo_id - 1);
 		else
@@ -104,7 +97,7 @@ void	work(t_prm *philo)				// problem in forks
 			philo->philo_id = 1;
 		else
 			(philo->philo_id)++;
-	// } */
+	} */
 }
 
 void	create_philos(t_prm *philo)
@@ -118,17 +111,27 @@ void	create_philos(t_prm *philo)
 			perror("pthread");
 			exit(1);
 		}
-		printf("hola\n");
+		// printf("test %d \n", philo->philo_id);
 		if (pthread_detach(thread_id[philo->philo_id - 1]))
 			printf("---------------------------------detach fail\n");
 		philo->philo_id++;
 	}
 }
 
+unsigned long	set_time(t_prm *philo, struct timeval *now)
+{
+	unsigned long time;
+
+	time = (philo->tp->tv_sec - now->tv_sec) * 1000 + (philo->tp->tv_usec - now->tv_usec) / 1000;
+	return (time);
+}
+
 int main(int argc, char **argv)
 {
 	t_time	time;
 	t_prm	philo;
+	struct timeval *now = NULL;
+
 	//size_t		i = 0;
 
 	if (argc == 5 || argc == 6)
@@ -137,13 +140,8 @@ int main(int argc, char **argv)
 		printf("die=>%d eat=>%d sleep=>%d m_eat=>%d\n", time.die, time.eat, time.sleep, time.m_eat);
 		make_mutex(&philo);
 		create_philos(&philo);
-		philo.current_time = get_time(philo);
-	
-		/* while (philo.current_time - philo.primary < philo.primary)
-		{
-			philo.current_time = get_time(philo);
-			printf("TIME => %llu \n", philo.current_time - philo.primary);
-		} */
+		gettimeofday(now, NULL);
+		printf("%lu\n", set_time(&philo, now));
 	}
 	
 	else

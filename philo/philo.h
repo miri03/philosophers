@@ -6,7 +6,7 @@
 /*   By: meharit <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/27 21:07:34 by meharit           #+#    #+#             */
-/*   Updated: 2023/03/20 13:28:28 by meharit          ###   ########.fr       */
+/*   Updated: 2023/03/22 00:45:05 by meharit          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,8 +36,6 @@ typedef struct s_philo
 	int				id;
 	int				philo_id;
 	int				n_philo;
-	int				current_time;
-	unsigned long long				primary;
 	pthread_mutex_t	*fork;
 
 	int				die;
@@ -45,8 +43,10 @@ typedef struct s_philo
 	int				sleep;
 	int				m_eat;
 
+	struct timeval *tp;
+	struct timeval start;
+	struct timeval end;
 
-//	t_list		*p_list;          // remove it
 }				t_prm;
 
 typedef struct s_time
