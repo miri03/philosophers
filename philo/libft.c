@@ -73,3 +73,10 @@ void	ft_putstr_fd(char *s, int fd)
 	if (s != NULL && fd >= 0)
 		write(fd, s, ft_strlen(s));
 }
+
+int	ft_isalpha(int c)
+{
+	if ((c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z'))
+		return (1);
+	return (0);
+}
