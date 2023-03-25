@@ -27,7 +27,7 @@ typedef struct s_philo t_prm;
 typedef struct s_list
 {
 	int			id;
-	pthread_t	*thread_id;
+	pthread_t	thread_id;
 	int			n_eat;
 	
 	long long	last_meal;
@@ -36,7 +36,6 @@ typedef struct s_list
 
 typedef struct s_philo
 {
-
 	int				n_philo;
 
 	int				die;
@@ -44,31 +43,21 @@ typedef struct s_philo
 	int				sleep;
 	int				m_eat;
 	
-	t_list		*p_list;
+	t_list			*p_list;
 
 	pthread_mutex_t	*fork;
 
-	struct timeval init;
-	struct timeval start;
+	struct timeval	init;
+	struct timeval	start;
 
-	struct timeval end;
+	struct timeval	end;
 
 }				t_prm;
 
-// typedef struct s_time
-// {
-// 	int	die;
-// 	int	eat;
-// 	int	sleep;
-// 	int	m_eat;
-// }			t_time;
-
 int		ft_atoi(const char *str);
-t_list	*ft_lstlast(t_list *lst);
-void	ft_lstadd_back(t_list **lst, t_list *new);
-int		ft_lstsize(t_list *lst);
-t_list	*ft_lstnew(int content);
 void	ft_putstr_fd(char *s, int fd);
 int		ft_isalpha(int c);
+void	ft_printf( char *mess, unsigned long time, int id);
+unsigned long	set_time(t_prm *philo);
 
 #endif

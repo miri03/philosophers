@@ -53,70 +53,38 @@ int	time_parm(char **argv, int argc, t_prm *philo)
 	return (1);
 }
 
-// void	work(t_prm *philo)
-// {
-	
-// 	if (philo->philo_id % 2 == 0)
-// 		 usleep(1500);
-	
-// 	printf("%d\n", philo->philo_id);
-	
-
-// 	while (1)
-// 	{
-// 		if (pthread_mutex_lock(&(philo->fork[philo->philo_id - 1])) == 0)
-// 			printf("philo %d has taken the fork %d \n", philo->philo_id, philo->philo_id - 1);
-// 		else
-// 		 printf("------------failed to take a fork\n");
-
-// 		if (pthread_mutex_lock(&(philo->fork[philo->philo_id])) == 0)
-// 			printf("philo %d has taken the fork %d\n", philo->philo_id, philo->philo_id);
-// 		printf("philo %d is eating\n", philo->philo_id);
-
-// 		usleep(philo->eat * 1000);
-// 		printf("\nphilo %d finished eating\n", philo->philo_id);
-
-// 		// printf("\nphilo %d is sleeping\n", philo->philo_id);
-// 		// usleep(philo->sleep * 1000);
-
-
-// 		if (pthread_mutex_unlock(&(philo->fork[philo->philo_id - 1])))
-// 				printf("1 unlock failed\n");
-// 		else
-// 			printf("fork %d is in the table\n", philo->philo_id - 1);
-		
-// 		if (philo->philo_id ==  philo->n_philo)
-// 			philo->philo_id = 1;
-// 		else
-// 			(philo->philo_id)++;
-// 	}
-// }
-
-void	f_life(t_list *philo)
+void	work(void *arg)
 {
+	t_list *philo;
+
+	philo = (t_list*)arg;
 	while (1)
 	{
-		if (pthread_mutex_lock(philo->fork) == 0)
-			printf("philo %d has taken the fork %d \n", philo->id, philo->id - 1);
+		if (pthread_mutex_lock(&(philo->info->fork[philo->id])) == 0)
+			ft_printf("[%lu] philo %d has taken a fork\n", set_time(philo->info), philo->id);
 		else
 		 printf("------------failed to take a fork\n");
 
-		if (pthread_mutex_lock((philo->next)->fork) == 0)
-			printf("philo %d has taken the fork %d\n", philo->id, philo->id);
+		if (pthread_mutex_lock(&(philo->info->fork[philo->id + 1 % philo->info->n_philo])) == 0)
+			ft_printf("[%d] philo %d has taken a fork\n", set_time(philo->info), philo->id);
 		printf("philo %d is eating\n", philo->id);
-
+		ft_printf("[%lu] philo %d is eating\n",set_time(philo->info), philo->id);
 		// usleep(philo->eat * 1000);
 		// printf("\nphilo %d finished eating\n", philo->philo_id);
 
 		// printf("\nphilo %d is sleeping\n", philo->philo_id);
 		// usleep(philo->sleep * 1000);
 
-
-		if (pthread_mutex_unlock(philo->fork))
+		if (pthread_mutex_unlock(&(philo->info->fork[philo->id])))
 				printf("1 unlock failed\n");
 		else
 			printf("fork %d is in the table\n", philo->id - 1);
 		
+		if (pthread_mutex_unlock(&(philo->info->fork[philo->id + 1 % philo->info->n_philo])))
+				printf("1 unlock failed\n");
+		else
+			printf("fork %d is in the table\n", philo->id - 1);
+
 		// if (philo->philo_id ==  philo->n_philo)
 		// 	philo->philo_id = 1;
 		// else
@@ -124,34 +92,33 @@ void	f_life(t_list *philo)
 	}
 }
 
-void	work(t_prm *philo)
+void	ft_printf( char *mess, unsigned long time, int id)
 {
-	t_list *tmp;
+	pthread_mutex_t print;
 
-	tmp = philo->p_list;
-	while (tmp->id < philo->n_philo)
-	{
-		f_life(tmp);
-		tmp = tmp->next;
-	}
+	pthread_mutex_lock(&print);
+	printf(mess, time, id);
+	pthread_mutex_unlock(&print);
 }
 
 void	create_philos(t_prm *philo)
 {
-	(void)philo;
-	// pthread_t	thread_id[philo->n_philo];
+	int	i;
 
-	// while (philo->philo_id <= philo->n_philo)
-	// {
-	// 	if (pthread_create(&thread_id[philo->philo_id - 1], NULL, (void*)work, philo) == -1)
-	// 	{
-	// 		perror("pthread");
-	// 		exit(1);
-	// 	}
-	// 	if (pthread_detach(thread_id[philo->philo_id - 1]))
-	// 		printf("---------------------------------detach fail\n");
-	// 	philo->philo_id++;
-	// }
+	i = 0;
+	philo->p_list = malloc(sizeof(t_list) * philo->n_philo);
+	if (philo->p_list == NULL)
+		printf("failed to allocet for philos\n");
+	gettimeofday(&(philo->init), NULL);
+	while (i <= philo->n_philo)
+	{
+		if (pthread_create(&(philo->p_list[i].thread_id), NULL, (void*)work, &philo->p_list[i]) == -1)
+		{
+			perror("pthread");
+			exit(1);
+		}
+		i++;
+	}
 }
 
 void	make_mutex(t_prm *philo)
@@ -177,9 +144,7 @@ unsigned long	set_time(t_prm *philo)
 	struct timeval now;
 
 	gettimeofday(&now, NULL);
-//	printf("----------------%d\n", philo->tp.tv_usec);
-	time = (philo->init.tv_sec - now.tv_sec) * 1000;
-	// time = (philo->tp.tv_sec - now->tv_sec) + (philo->tp.tv_usec - now->tv_usec);
+	time = (philo->init.tv_sec - now.tv_sec) * 1000 + (philo->init.tv_usec - now.tv_usec) / 1000;
 	return (time);
 }
 

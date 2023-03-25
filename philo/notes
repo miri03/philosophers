@@ -2,6 +2,7 @@ make and init a struct with all infos “forks …..”
 check the infos “being positive digits” “not less than 60”
 a struct with individual infos about philos ”last meal / id / thread id/ struct to all the infos”
 make mutex /allocate for forks/ and philo structs
+
 >create_philo 
-=>get the init time / each time send to the function the struct of the philo / grab forks (philo->id && philo->id +1 % n_philo) / eat update last meal time / put forks / sleep & think
+=>get the init time / send to the function each time the struct of the philo / grab forks (philo->id && philo->id +1 % n_philo) / eat update last meal time / put forks / sleep & think
 at the end => join_threads / destroy mutex
