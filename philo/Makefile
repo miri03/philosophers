@@ -18,10 +18,14 @@ RM = rm -rf
 CFILES = philo.c \
 		 ft_atoi.c \
 		 libft.c \
+		 time.c \
+		 inits.c \
 
 OFILES = philo.o \
 		 ft_atoi.o \
 		 libft.o \
+		 time.o \
+		 inits.o \
 
 all: $(NAME)
 
