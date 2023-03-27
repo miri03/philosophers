@@ -35,30 +35,38 @@ void	work(void *arg)
 	t_list *philo;
 
 	philo = (t_list*)arg;
+	if (philo->id % 2 == 0)
+		usleep(1500);
 	while (1)
 	{
-		if (pthread_mutex_lock(&(philo->info->fork[philo->id])) == 0)
+		if (pthread_mutex_lock(&(philo->info->fork[philo->id - 1])) == 0)
+		{
 			ft_printf("[%lu] philo %d has taken a fork\n", timer() - philo->info->init, philo->id);
+			printf("fork %d\n", philo->id - 1);
+		}
 		else
 			printf("------------[%d]failed to take a fork\n", philo->id);
-		if (pthread_mutex_lock(&(philo->info->fork[philo->id + 1 % philo->info->n_philo])) == 0)
+		if (pthread_mutex_lock(&(philo->info->fork[philo->id % philo->info->n_philo])) == 0)
+		{
 			ft_printf("[%d] philo %d has taken a fork\n", timer() - philo->info->init, philo->id);
-			else
-				printf("------------[%d]failed to take a fork\n", philo->id);
+			printf("fork %d\n", philo->id % philo->info->n_philo);
+		}
+		else
+			printf("------------[%d]failed to take a fork\n", philo->id);
 		ft_printf("[%lu] philo %d is eating\n",set_time(philo->info), philo->id);
 
 		sleepi(philo->info->eat);
 		ft_printf("[%lu] philo %d finished eating\n", set_time(philo->info), philo->id);
 
-		if (pthread_mutex_unlock(&(philo->info->fork[philo->id])))
-				printf("1 unlock failed\n");
+		if (pthread_mutex_unlock(&(philo->info->fork[philo->id - 1])))
+				printf("%d unlock failed\n", philo->id);
 		else
 			printf("fork %d is in the table\n", philo->id - 1);
 		
-		if (pthread_mutex_unlock(&(philo->info->fork[philo->id + 1 % philo->info->n_philo])))
-				printf("1 unlock failed\n");
+		if (pthread_mutex_unlock(&(philo->info->fork[philo->id % philo->info->n_philo])))
+				printf("%d unlock failed\n", philo->id);
 		else
-			printf("fork %d is in the table\n", philo->id - 1);
+			printf("fork %d is in the table\n", philo->id);
 
 		// printf("\nphilo %d is sleeping\n", philo->philo_id);
 		// usleep(philo->sleep * 1000);
@@ -68,7 +76,7 @@ void	work(void *arg)
 		// else
 		// 	(philo->philo_id)++;
 	}
-}
+} 
 
 void	create_philos(t_prm *philo)
 {
@@ -79,15 +87,12 @@ void	create_philos(t_prm *philo)
 	if (philo->p_list == NULL)
 		printf("failed to allocet for philos\n");
 	philo->init = timer();
-	while (i <= philo->n_philo)
+	while (i < philo->n_philo)
 	{
 		philo->p_list[i].id = i+1;
 		philo->p_list[i].info = philo;
-		if (pthread_create(&(philo->p_list[i].thread_id), NULL, (void*)work, &philo->p_list[i]) == -1)
-		{
-			perror("pthread");
-			exit(1);
-		}
+		pthread_create(&(philo->p_list[i].thread_id), NULL, (void*)work, &philo->p_list[i]);
+		pthread_detach(philo->p_list[i].thread_id);
 		i++;
 	}
 }
@@ -125,9 +130,9 @@ int	check_info(t_prm philo)
 int main(int argc, char **argv)
 {
 	t_prm	philo;
-	int		i;
+	// int		i;
 
-	i = 0;
+	// i = 0;
 	if (argc == 5 || argc == 6)
 	{
 		if (time_parm(argv, argc, &philo))
@@ -140,11 +145,11 @@ int main(int argc, char **argv)
 				// usleep(100);
 			}
 		}
-		while (i < philo.n_philo)
-		{
-			pthread_join(philo.p_list[i].thread_id, NULL);
-			i++;
-		}
+		// while (i < philo.n_philo)
+		// {
+		// 	pthread_join(philo.p_list[i].thread_id, NULL);
+		// 	i++;
+		// }
 	}
 	else
 		ft_putstr_fd(RED"Wrong number of arguments\n"reset, 2);
