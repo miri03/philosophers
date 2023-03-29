@@ -6,3 +6,12 @@ make mutex /allocate for forks/ and philo structs
 >create_philo 
 =>get the init time / send to the function each time the struct of the philo / grab forks (philo->id && philo->id +1 % n_philo) / eat update last meal time / put forks / sleep & think
 at the end => join_threads / destroy mutex
+
+if time parameters equal to zero
+
+[200]         => 500
+[700]
+
+now - to_die > last_meal === died ???
+
+last_meal + to_die < now === died

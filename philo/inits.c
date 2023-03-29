@@ -12,13 +12,11 @@
 
 #include "philo.h"
 
-void	ft_printf( char *mess, unsigned long time, int id)
+void	ft_printf(char *mess, long long time, int id, t_prm *philo)
 {
-	pthread_mutex_t print;
-
-	pthread_mutex_lock(&print);
+	pthread_mutex_lock(philo->p_list->print);
 	printf(mess, time, id);
-	pthread_mutex_unlock(&print);
+	pthread_mutex_unlock(philo->p_list->print);
 }
 
 int	check_is_digit(char **argv, int argc)
@@ -47,14 +45,14 @@ int	check_is_digit(char **argv, int argc)
 int	time_parm(char **argv, int argc, t_prm *philo)
 {
 	philo->p_list = NULL;
-	// gettimeofday(&(philo->init), NULL);
-
 	philo->m_eat = 0;
 	if (!check_is_digit(argv, argc))
 		return (0);
 	philo->die = ft_atoi(argv[2]);
 	philo->eat = ft_atoi(argv[3]);
 	philo->sleep = ft_atoi(argv[4]);
+
+	philo->died = 0;
 
 	if (argc == 6)
 		philo->m_eat = ft_atoi(argv[5]);

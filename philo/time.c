@@ -12,23 +12,18 @@
 
 #include "philo.h"
 
-unsigned long	timer()
+long long	timer()
 {
 	struct timeval	time;
-	unsigned long	ret;
 
 	gettimeofday(&time, NULL);
-	
-	ret = time.tv_sec * 1000 + time.tv_usec / 1000;
-	return (ret);
+	return (time.tv_sec * 1000 + time.tv_usec / 1000);
 }
 
-unsigned long	set_time(t_prm *philo)
+long long	set_time(t_prm *philo)
 {
-	unsigned long now;
-	unsigned long ret;
+	long long now;
 
 	now = timer();
-	ret = now - philo->init;
-	return (ret);
+	return (now - philo->init);
 }
