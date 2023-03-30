@@ -1,0 +1,134 @@
+die=>410 eat=>200 sleep=>200 m_eat=>0
+1 ms		philo 1 has taken a fork
+1 ms		philo 1 has taken a fork
+1 ms		philo 1 is eating
+5 ms		philo 3 has taken a fork
+5 ms		philo 3 has taken a fork
+5 ms		philo 3 is eating
+201 ms		philo 1 finished eating
+201 ms		philo 1 is sleeping
+201 ms		philo 2 has taken a fork
+205 ms		philo 3 finished eating
+205 ms		philo 3 is sleeping
+205 ms		philo 2 has taken a fork
+205 ms		philo 2 is eating
+205 ms		philo 4 has taken a fork
+205 ms		philo 4 has taken a fork
+205 ms		philo 4 is eating
+401 ms		philo 1 is thinking
+405 ms		philo 4 finished eating
+405 ms		philo 4 is sleeping
+405 ms		philo 1 has taken a fork
+405 ms		philo 3 is thinking
+405 ms		philo 2 finished eating
+405 ms		philo 2 is sleeping
+405 ms		philo 3 has taken a fork
+405 ms		philo 1 has taken a fork
+405 ms		philo 1 is eating
+405 ms		philo 3 has taken a fork
+405 ms		philo 3 is eating
+605 ms		philo 2 is thinking
+605 ms		philo 3 finished eating
+605 ms		philo 3 is sleeping
+605 ms		philo 4 is thinking
+605 ms		philo 4 has taken a fork
+605 ms		philo 1 finished eating
+605 ms		philo 1 is sleeping
+605 ms		philo 4 has taken a fork
+605 ms		philo 4 is eating
+605 ms		philo 2 has taken a fork
+605 ms		philo 2 has taken a fork
+605 ms		philo 2 is eating
+805 ms		philo 3 is thinking
+805 ms		philo 2 finished eating
+805 ms		philo 2 is sleeping
+805 ms		philo 4 finished eating
+805 ms		philo 4 is sleeping
+805 ms		philo 3 has taken a fork
+805 ms		philo 3 has taken a fork
+805 ms		philo 1 is thinking
+805 ms		philo 1 has taken a fork
+805 ms		philo 1 has taken a fork
+805 ms		philo 1 is eating
+805 ms		philo 3 is eating
+1005 ms		philo 2 is thinking
+1005 ms		philo 4 is thinking
+1005 ms		philo 1 finished eating
+1005 ms		philo 3 finished eating
+1005 ms		philo 2 has taken a fork
+1005 ms		philo 1 is sleeping
+1005 ms		philo 4 has taken a fork
+1005 ms		philo 2 has taken a fork
+1005 ms		philo 3 is sleeping
+1005 ms		philo 4 has taken a fork
+1005 ms		philo 4 is eating
+1005 ms		philo 2 is eating
+1205 ms		philo 2 finished eating
+1205 ms		philo 3 is thinking
+1205 ms		philo 3 has taken a fork
+1205 ms		philo 1 is thinking
+1205 ms		philo 2 is sleeping
+1205 ms		philo 4 finished eating
+1205 ms		philo 4 is sleeping
+1205 ms		philo 1 has taken a fork
+1205 ms		philo 1 has taken a fork
+1205 ms		philo 1 is eating
+1205 ms		philo 3 has taken a fork
+1205 ms		philo 3 is eating
+1405 ms		philo 4 is thinking
+1405 ms		philo 1 finished eating
+1405 ms		philo 1 is sleeping
+1405 ms		philo 3 finished eating
+1405 ms		philo 2 is thinking
+1405 ms		philo 4 has taken a fork
+1405 ms		philo 3 is sleeping
+1405 ms		philo 2 has taken a fork
+1405 ms		philo 2 has taken a fork
+1405 ms		philo 2 is eating
+1405 ms		philo 4 has taken a fork
+1405 ms		philo 4 is eating
+1605 ms		philo 2 finished eating
+1605 ms		philo 2 is sleeping
+1605 ms		philo 4 finished eating
+1605 ms		philo 4 is sleeping
+1605 ms		philo 1 is thinking
+1605 ms		philo 1 has taken a fork
+1605 ms		philo 1 has taken a fork
+1605 ms		philo 1 is eating
+1605 ms		philo 3 is thinking
+1605 ms		philo 3 has taken a fork
+1605 ms		philo 3 has taken a fork
+1605 ms		philo 3 is eating
+1805 ms		philo 2 is thinking
+1805 ms		philo 4 is thinking
+1805 ms		philo 3 finished eating
+1805 ms		philo 3 is sleeping
+1805 ms		philo 1 finished eating
+1805 ms		philo 4 has taken a fork
+1805 ms		philo 4 has taken a fork
+1805 ms		philo 4 is eating
+1805 ms		philo 1 is sleeping
+1805 ms		philo 2 has taken a fork
+1805 ms		philo 2 has taken a fork
+1805 ms		philo 2 is eating
+2005 ms		philo 1 is thinking
+2005 ms		philo 2 finished eating
+2005 ms		philo 2 is sleeping
+2005 ms		philo 3 is thinking
+2005 ms		philo 3 has taken a fork
+2005 ms		philo 4 finished eating
+2005 ms		philo 4 is sleeping
+2005 ms		philo 1 has taken a fork
+2005 ms		philo 1 has taken a fork
+2005 ms		philo 1 is eating
+2005 ms		philo 3 has taken a fork
+2005 ms		philo 3 is eating
+2205 ms		philo 3 finished eating
+2205 ms		philo 3 is sleeping
+2205 ms		philo 2 is thinking
+2205 ms		philo 1 finished eating
+2205 ms		philo 1 is sleeping
+2205 ms		philo 4 is thinking
+2205 ms		philo 4 has taken a fork
+2205 ms		philo 4 has taken a fork
+2205 ms		philo 4 is 

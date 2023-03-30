@@ -12,24 +12,6 @@
 
 #include "philo.h"
 
-void	sleepi(int x)
-{
-	struct timeval	start;
-	struct timeval	end;
-	int				time;
-
-	gettimeofday(&start, NULL);
-	while (1)
-	{
-		usleep(100);
-		gettimeofday(&end, NULL);
-		time = (end.tv_sec * 1000 + end.tv_usec / 1000) - (start.tv_sec * 1000
-				+ start.tv_usec / 1000);
-		if (x <= time)
-			break ;
-	}
-}
-
 void	work(void *arg)
 {
 	t_list	*philo;
@@ -45,9 +27,12 @@ void	work(void *arg)
 		ft_printf("%lld ms		philo %d has taken a fork\n", set_time(philo->info), philo->id, philo->info);
 		ft_printf("%lld ms		philo %d is eating\n", set_time(philo->info), philo->id, philo->info);
 
+		pthread_mutex_lock(&philo->info->print);
 		philo->last_meal = set_time(philo->info);
+		pthread_mutex_unlock(&philo->info->print);
+
 		sleepi(philo->info->eat);
-		
+
 		ft_printf("%lld ms		philo %d finished eating\n", set_time(philo->info), philo->id, philo->info);
 		pthread_mutex_unlock(&(philo->info->fork[philo->id - 1]));
 		pthread_mutex_unlock(&(philo->info->fork[philo->id % philo->info->n_philo]));
@@ -60,24 +45,22 @@ void	work(void *arg)
 
 void	create_philos(t_prm *philo)
 {
-	pthread_mutex_t	write;
-	int				i;
+	int	i;
 
 	i = 0;
 	philo->p_list = malloc(sizeof(t_list) * philo->n_philo);
 	if (philo->p_list == NULL)
 		printf("failed to allocet for philos\n");
 	philo->init = timer();
-	pthread_mutex_init(&write, NULL);
 	while (i < philo->n_philo)
 	{
-		philo->p_list[i].print = &write;
+		philo->p_list[i].died = &philo->died;
 		philo->p_list[i].last_meal = set_time(philo);
 		philo->p_list[i].id = i + 1;
 		philo->p_list[i].info = philo;
 		pthread_create(&(philo->p_list[i].thread_id), NULL, (void *)work,
 				&philo->p_list[i]);
-		usleep(100);
+		usleep(1500);
 		i++;
 	}
 }
@@ -87,6 +70,8 @@ void	make_mutex(t_prm *philo)
 	int	i;
 
 	i = 0;
+	pthread_mutex_init(&philo->print, NULL);
+	pthread_mutex_init(&philo->death, NULL);
 	philo->fork = malloc(sizeof(pthread_mutex_t) * philo->n_philo);
 	while (i < philo->n_philo)
 	{
@@ -96,29 +81,23 @@ void	make_mutex(t_prm *philo)
 	}
 }
 
-int	check_info(t_prm philo)
-{
-	if (philo.n_philo < 0 || philo.die < 0
-		|| philo.eat < 0 | philo.sleep < 0 | philo.m_eat < 0)
-	{
-		printf(RED "invalid parameters\n" reset);
-		return (0);
-	}
-	return (1);
-}
-
-int	is_dead(t_prm philo)
+int	is_dead(t_prm *philo)
 {
 	int	i;
 
 	i = 0;
-	while (i < philo.n_philo)
+	while (i < philo->n_philo)
 	{
-		if (set_time(&philo) - philo.die > philo.p_list[i].last_meal)
+		if (set_time(philo) - philo->die > philo->p_list[i].last_meal)
 		{
-			pthread_mutex_lock(philo.p_list[i].print);
-			printf("%lld ms		philo %d is dead\n", set_time(&philo),
-							philo.p_list[i].id);
+
+			pthread_mutex_lock(&philo->death);
+			*philo->p_list[i].died = 1;
+			pthread_mutex_unlock(&philo->death);
+
+			pthread_mutex_lock(&philo->print);
+			printf("%lld ms		philo %d is dead\n", set_time(philo), philo->p_list[i].id);
+
 			return (1);
 		}
 		i++;
@@ -151,7 +130,7 @@ int	main(int argc, char **argv)
 		}
 		while (1)
 		{
-			if (is_dead(philo))
+			if (is_dead(&philo))
 				break ;
 		}
 	}

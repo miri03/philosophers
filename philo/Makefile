@@ -19,13 +19,13 @@ CFILES = philo.c \
 		 ft_atoi.c \
 		 libft.c \
 		 time.c \
-		 inits.c \
+		 utis.c \
 
 OFILES = philo.o \
 		 ft_atoi.o \
 		 libft.o \
 		 time.o \
-		 inits.o \
+		 utis.o \
 
 all: $(NAME)
 
@@ -34,6 +34,9 @@ $(NAME) : $(OFILES)
 
 debug: $(OFILES) 
 	cc -lpthread -fsanitize=thread -g $(CFLAGS) $(OFILES) -o $(NAME)
+
+segv: $(OFILES) 
+	cc -lpthread -fsanitize=address -g $(CFLAGS) $(OFILES) -o $(NAME)
 
 clean:
 	$(RM) $(OFILES)

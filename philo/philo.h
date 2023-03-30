@@ -26,10 +26,10 @@ typedef struct s_philo t_prm;
 
 typedef struct s_list
 {
-	pthread_mutex_t	*print;
 	int			id;
 	pthread_t	thread_id;
 	int			n_eat;
+	int			*died;
 	long long	last_meal;
 	t_prm		*info;
 }				t_list;
@@ -44,14 +44,16 @@ typedef struct s_philo
 	int				m_eat;
 	t_list			*p_list;
 	pthread_mutex_t	*fork;
-	
+	pthread_mutex_t	print;
+	pthread_mutex_t	death;
 
 	long long	init;
-
 	int			died;
 
 }				t_prm;
 
+int				check_info(t_prm philo);
+void			sleepi(int x);
 int				time_parm(char **argv, int argc, t_prm *philo);
 int				ft_atoi(const char *str);
 void			ft_putstr_fd(char *s, int fd);
