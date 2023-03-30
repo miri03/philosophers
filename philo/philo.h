@@ -29,7 +29,6 @@ typedef struct s_list
 	int			id;
 	pthread_t	thread_id;
 	int			n_eat;
-	int			*died;
 	long long	last_meal;
 	t_prm		*info;
 }				t_list;

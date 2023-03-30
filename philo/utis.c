@@ -14,15 +14,10 @@
 
 void	ft_printf(char *mess, long long time, int id, t_prm *philo)
 {
-
-	// pthread_mutex_lock(&philo->print);
-	// printf(mess, time, id);
-	// pthread_mutex_unlock(&philo->print);
-
 	if (pthread_mutex_lock(&philo->print))
 		printf("lock fail [%s]\n", mess);
 
-	if (!philo->died)
+	// if (!philo->died)
 		printf(mess, time, id);
 
 	if (pthread_mutex_unlock(&philo->print))
