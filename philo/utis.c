@@ -14,14 +14,27 @@
 
 void	ft_printf(char *mess, long long time, int id, t_prm *philo)
 {
-	if (pthread_mutex_lock(&philo->print))
-		printf("lock fail [%s]\n", mess);
+	// printf("-----%p\n", &philo->p_list[1].died);
 
-	// if (!philo->died)
+	// pthread_mutex_lock(&philo->death);
+	if (philo->p_list[1].died == 0)
+	{
+
+		pthread_mutex_lock(&philo->print);
 		printf(mess, time, id);
+		pthread_mutex_unlock(&philo->print);
+		
+	}
+	// pthread_mutex_unlock(&philo->death);
 
-	if (pthread_mutex_unlock(&philo->print))
-		printf("unlock fail [%s]\n", mess);
+	// err = pthread_mutex_lock(&philo->print);
+	// if (err)
+	// 	printf("------------%d   %s \n", err, mess);
+	// if (!philo->p_list[0].died)
+	// 	printf(mess, time, id);
+	// err = pthread_mutex_unlock(&philo->print);
+	// if (err)
+	// 	printf("+++++++++++%d\n", err);
 }
 
 int	check_info(t_prm philo)
@@ -68,12 +81,26 @@ int	time_parm(char **argv, int argc, t_prm *philo)
 	philo->eat = ft_atoi(argv[3]);
 	philo->sleep = ft_atoi(argv[4]);
 
-	philo->died = 0;
-
 	if (argc == 6)
 		philo->m_eat = ft_atoi(argv[5]);
 	philo->n_philo = ft_atoi(argv[1]);
 	return (1);
+}
+
+void	free_destroy(t_prm *philo)
+{
+	int	i;
+
+	i = 0;
+	while (i < philo->n_philo)
+	{
+		pthread_mutex_destroy(&philo->fork[i]);
+		i++;
+	}
+	pthread_mutex_destroy(&philo->print);
+	pthread_mutex_destroy(&philo->death);
+	free(philo->fork);
+	// free(philo->p_list);
 }
 
 void	sleepi(int x)

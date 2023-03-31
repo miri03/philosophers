@@ -31,12 +31,14 @@ typedef struct s_list
 	int			n_eat;
 	long long	last_meal;
 	t_prm		*info;
+
+	int			died;
+
 }				t_list;
 
 typedef struct s_philo
 {
 	int				n_philo;
-
 	int				die;
 	int				eat;
 	int				sleep;
@@ -45,14 +47,17 @@ typedef struct s_philo
 	pthread_mutex_t	*fork;
 	pthread_mutex_t	print;
 	pthread_mutex_t	death;
+	int				*finish;
+
+	int			died;
 
 	long long	init;
-	int			died;
 
 }				t_prm;
 
 int				check_info(t_prm philo);
 void			sleepi(int x);
+void			free_destroy(t_prm *philo);
 int				time_parm(char **argv, int argc, t_prm *philo);
 int				ft_atoi(const char *str);
 void			ft_putstr_fd(char *s, int fd);

@@ -19,7 +19,7 @@ void	work(void *arg)
 	philo = (t_list *)arg;
 	if (philo->id % 2 == 0)
 		usleep(1000);
-	while (!philo->info->died)
+	while (!philo->died)
 	{
 		pthread_mutex_lock(&(philo->info->fork[philo->id - 1]));
 		ft_printf("%lld ms		philo %d has taken a fork\n", set_time(philo->info), philo->id, philo->info);
@@ -54,6 +54,7 @@ void	create_philos(t_prm *philo)
 	philo->init = timer();
 	while (i < philo->n_philo)
 	{
+		philo->p_list[i].died = 0;
 		philo->p_list[i].last_meal = set_time(philo);
 		philo->p_list[i].id = i + 1;
 		philo->p_list[i].info = philo;
@@ -83,7 +84,9 @@ void	make_mutex(t_prm *philo)
 void	is_dead(t_prm *philo)
 {
 	int	i;
+	int	j;
 
+	j = 0;
 	i = 0;
 	while (1)
 	{
@@ -94,17 +97,22 @@ void	is_dead(t_prm *philo)
 		if (set_time(philo) - philo->die > philo->p_list[i].last_meal)
 		{
 			pthread_mutex_unlock(&philo->death);
-			// ft_printf("%lld ms		philo %d is dead\n", set_time(philo), philo->p_list[i].id, philo);
 
 			pthread_mutex_lock(&philo->print);
 			printf("%lld ms		philo %d is dead\n", set_time(philo), philo->p_list[i].id);
-			philo->died = 1;
-			break ;
+			while (j < philo->n_philo)
+			{
+				pthread_mutex_lock(&philo->death);
+				philo->p_list[i].died = 1;
+				j++;
+				pthread_mutex_unlock(&philo->death);
+				
+			}			
+			return ;
 		}
 		pthread_mutex_unlock(&philo->death);
 		i++;
 	}
-	return ;
 }
 
 int	main(int argc, char **argv)
@@ -123,16 +131,16 @@ int	main(int argc, char **argv)
 						philo.eat, philo.sleep, philo.m_eat);
 				make_mutex(&philo);
 				create_philos(&philo);
+		
+				while (i < philo.n_philo)
+				{
+					pthread_detach(philo.p_list[i].thread_id);
+					i++;
+				}
+				is_dead(&philo);
+				free_destroy(&philo);
 			}
 		}
-		while (i < philo.n_philo)
-		{
-			pthread_detach(philo.p_list[i].thread_id);
-			i++;
-		}
-		// while (!philo.died)
-		is_dead(&philo);
-			
 	}
 	else
 		ft_putstr_fd(RED "Wrong number of arguments\n" reset, 2);
