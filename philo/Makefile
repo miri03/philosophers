@@ -33,7 +33,7 @@ $(NAME) : $(OFILES)
 	cc -lpthread $(CFLAGS) $(OFILES) -o $(NAME)
 
 debug: $(OFILES) 
-	cc -lpthread -fsanitize=thread -g $(CFLAGS) $(OFILES) -o $(NAME)
+	cc -lpthread -g -fsanitize=thread  $(CFLAGS) $(OFILES) -o $(NAME)
 
 segv: $(OFILES) 
 	cc -lpthread -fsanitize=address -g $(CFLAGS) $(OFILES) -o $(NAME)

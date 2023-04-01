@@ -14,33 +14,15 @@
 
 void	ft_printf(char *mess, long long time, int id, t_prm *philo)
 {
-	// printf("-----%p\n", &philo->p_list[1].died);
-
-	// pthread_mutex_lock(&philo->death);
-	if (philo->p_list[1].died == 0)
-	{
-
 		pthread_mutex_lock(&philo->print);
 		printf(mess, time, id);
 		pthread_mutex_unlock(&philo->print);
-		
-	}
-	// pthread_mutex_unlock(&philo->death);
-
-	// err = pthread_mutex_lock(&philo->print);
-	// if (err)
-	// 	printf("------------%d   %s \n", err, mess);
-	// if (!philo->p_list[0].died)
-	// 	printf(mess, time, id);
-	// err = pthread_mutex_unlock(&philo->print);
-	// if (err)
-	// 	printf("+++++++++++%d\n", err);
 }
 
 int	check_info(t_prm philo)
 {
 	if (philo.n_philo < 0 || philo.die < 0
-		|| philo.eat < 0 | philo.sleep < 0 | philo.m_eat < 0)
+		|| philo.eat < 0 || philo.sleep < 0 || philo.m_eat < 0)
 	{
 		printf(RED "invalid parameters\n" reset);
 		return (0);
@@ -98,7 +80,6 @@ void	free_destroy(t_prm *philo)
 		i++;
 	}
 	pthread_mutex_destroy(&philo->print);
-	pthread_mutex_destroy(&philo->death);
 	free(philo->fork);
 	// free(philo->p_list);
 }

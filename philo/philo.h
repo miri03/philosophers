@@ -31,8 +31,7 @@ typedef struct s_list
 	int			n_eat;
 	long long	last_meal;
 	t_prm		*info;
-
-	int			died;
+	pthread_mutex_t	*fork;
 
 }				t_list;
 
@@ -46,10 +45,6 @@ typedef struct s_philo
 	t_list			*p_list;
 	pthread_mutex_t	*fork;
 	pthread_mutex_t	print;
-	pthread_mutex_t	death;
-	int				*finish;
-
-	int			died;
 
 	long long	init;
 
@@ -65,4 +60,5 @@ int				ft_isalpha(int c);
 void			ft_printf( char *mess, long long time, int id, t_prm *philo);
 long long		set_time(t_prm *philo);
 long long		timer();
+void			grab_forks(t_list *philo);
 #endif
