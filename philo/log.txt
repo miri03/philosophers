@@ -1,0 +1,34 @@
+die=>310 eat=>200 sleep=>200 m_eat=>1
+1 ms		philo 1 has taken a fork
+1 ms		philo 1 has taken a fork
+1 ms		philo 1 is eating
+2 ms		philo 3 has taken a fork
+2 ms		philo 3 has taken a fork
+2 ms		philo 3 is eating
+4 ms		philo 5 has taken a fork
+4 ms		philo 5 has taken a fork
+4 ms		philo 5 is eating
+5 ms		philo 7 has taken a fork
+5 ms		philo 7 has taken a fork
+5 ms		philo 7 is eating
+201 ms		philo 1 finished eating
+201 ms		philo 1 is sleeping
+201 ms		philo 2 has taken a fork
+202 ms		philo 3 finished eating
+202 ms		philo 3 is sleeping
+202 ms		philo 2 has taken a fork
+202 ms		philo 2 is eating
+202 ms		philo 4 has taken a fork
+204 ms		philo 5 finished eating
+204 ms		philo 5 is sleeping
+204 ms		philo 6 has taken a fork
+204 ms		philo 4 has taken a fork
+204 ms		philo 4 is eating
+205 ms		philo 7 finished eating
+205 ms		philo 7 is sleeping
+205 ms		philo 8 has taken a fork
+205 ms		philo 8 has taken a fork
+205 ms		philo 8 is eating
+205 ms		philo 6 has taken a fork
+205 ms		philo 6 is eating
+312 ms		philo 1 is dead

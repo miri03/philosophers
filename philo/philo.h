@@ -18,6 +18,7 @@
 # include <stdlib.h>
 # include <sys/time.h>
 # include <unistd.h>
+#include <limits.h>
 
 #define RED "\e[0;31m"
 #define reset "\e[0m"
@@ -33,6 +34,8 @@ typedef struct s_list
 	t_prm		*info;
 	pthread_mutex_t	*fork;
 
+	
+
 }				t_list;
 
 typedef struct s_philo
@@ -45,6 +48,11 @@ typedef struct s_philo
 	t_list			*p_list;
 	pthread_mutex_t	*fork;
 	pthread_mutex_t	print;
+	pthread_mutex_t meal;
+
+	int				finished_eating;
+
+	int				finish;
 
 	long long	init;
 
@@ -60,5 +68,5 @@ int				ft_isalpha(int c);
 void			ft_printf( char *mess, long long time, int id, t_prm *philo);
 long long		set_time(t_prm *philo);
 long long		timer();
-void			grab_forks(t_list *philo);
+void			check_meals(t_prm *philo);
 #endif

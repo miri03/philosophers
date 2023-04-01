@@ -19,7 +19,7 @@ void	*work(void *arg)
 	philo = (t_list *)arg;
 	if (philo->id % 2 == 0)
 		usleep(1000);
-	while (1)
+	while (philo->info->finish)
 	{
 		pthread_mutex_lock(&(philo->fork[philo->id - 1]));
 		ft_printf("%lld ms		philo %d has taken a fork\n", set_time(philo->info), philo->id, philo->info);
@@ -29,13 +29,23 @@ void	*work(void *arg)
 		
 		philo->last_meal = set_time(philo->info);
 		sleepi(philo->info->eat);
+
 		ft_printf("%lld ms		philo %d finished eating\n", set_time(philo->info), philo->id, philo->info);
+		philo->n_eat++;
+		if (philo->n_eat == philo->info->m_eat)
+		{
+			// pthread_mutex_lock(&philo->info->meal);
+			philo->info->finished_eating++;
+			// pthread_mutex_unlock(&philo->info->meal);
+		}
+		
 		pthread_mutex_unlock(&(philo->fork[philo->id - 1]));
 		pthread_mutex_unlock(&(philo->fork[philo->id % philo->info->n_philo]));
 		ft_printf("%lld ms		philo %d is sleeping\n", set_time(philo->info), philo->id, philo->info);
 		sleepi(philo->info->sleep);
 		ft_printf("%lld ms		philo %d is thinking\n", set_time(philo->info), philo->id, philo->info);
 	}
+
 	return (NULL);
 }
 
@@ -50,6 +60,7 @@ void	create_philos(t_prm *philo)
 	philo->init = timer();
 	while (i < philo->n_philo)
 	{
+		philo->p_list[i].n_eat = 0;
 		philo->p_list[i].last_meal = set_time(philo);
 		philo->p_list[i].id = i + 1;
 		philo->p_list[i].info = philo;
@@ -68,6 +79,7 @@ void	make_mutex(t_prm *philo)
 
 	i = 0;
 	pthread_mutex_init(&philo->print, NULL);
+	pthread_mutex_init(&philo->meal, NULL);
 	philo->fork = malloc(sizeof(pthread_mutex_t) * philo->n_philo);
 	while (i < philo->n_philo)
 	{
@@ -82,7 +94,7 @@ void	is_dead(t_prm *philo)
 	int	i;
 
 	i = 0;
-	while (1)
+	while (philo->finish)
 	{
 		if (i == philo->n_philo)
 			i = 0;
@@ -109,6 +121,7 @@ int	main(int argc, char **argv)
 						philo.eat, philo.sleep, philo.m_eat);
 				make_mutex(&philo);
 				create_philos(&philo);
+				check_meals(&philo);
 				is_dead(&philo);
 				pthread_mutex_lock(&philo.print);
 				usleep(1000000);
@@ -119,3 +132,4 @@ int	main(int argc, char **argv)
 	else
 		ft_putstr_fd(RED "Wrong number of arguments\n" reset, 2);
 }
+ 

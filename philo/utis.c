@@ -19,6 +19,15 @@ void	ft_printf(char *mess, long long time, int id, t_prm *philo)
 		pthread_mutex_unlock(&philo->print);
 }
 
+void	check_meals(t_prm *philo)
+{
+	while(philo->finish)
+	{
+		if (philo->finished_eating == philo->n_philo)
+			philo->finish = 0;
+	}
+} 
+
 int	check_info(t_prm philo)
 {
 	if (philo.n_philo < 0 || philo.die < 0
@@ -56,7 +65,11 @@ int	check_is_digit(char **argv, int argc)
 int	time_parm(char **argv, int argc, t_prm *philo)
 {
 	philo->p_list = NULL;
-	philo->m_eat = 0;
+
+	philo->m_eat = INT_MAX;
+
+	philo->finish = 1;
+
 	if (!check_is_digit(argv, argc))
 		return (0);
 	philo->die = ft_atoi(argv[2]);
