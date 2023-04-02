@@ -21,12 +21,15 @@ void	ft_printf(char *mess, long long time, int id, t_prm *philo)
 
 void	check_meals(t_prm *philo)
 {
-	while(philo->finish)
+	if (philo->m_eat < INT_MAX)
 	{
-		if (philo->finished_eating == philo->n_philo)
-			philo->finish = 0;
+		while (philo->finish)
+		{
+			if (philo->finished_eating == philo->n_philo)
+				philo->finish = 0;
+		}
 	}
-} 
+}
 
 int	check_info(t_prm philo)
 {

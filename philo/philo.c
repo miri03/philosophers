@@ -28,16 +28,17 @@ void	*work(void *arg)
 		ft_printf("%lld ms		philo %d is eating\n", set_time(philo->info), philo->id, philo->info);
 		
 		philo->last_meal = set_time(philo->info);
+		philo->n_eat++;
+
+		if (philo->n_eat == philo->info->m_eat)
+		{
+			pthread_mutex_lock(&philo->info->meal);
+			philo->info->finished_eating++;
+			pthread_mutex_unlock(&philo->info->meal);
+		}
 		sleepi(philo->info->eat);
 
 		ft_printf("%lld ms		philo %d finished eating\n", set_time(philo->info), philo->id, philo->info);
-		philo->n_eat++;
-		if (philo->n_eat == philo->info->m_eat)
-		{
-			// pthread_mutex_lock(&philo->info->meal);
-			philo->info->finished_eating++;
-			// pthread_mutex_unlock(&philo->info->meal);
-		}
 		
 		pthread_mutex_unlock(&(philo->fork[philo->id - 1]));
 		pthread_mutex_unlock(&(philo->fork[philo->id % philo->info->n_philo]));
@@ -101,6 +102,7 @@ void	is_dead(t_prm *philo)
 		if (set_time(philo) - philo->die > philo->p_list[i].last_meal)
 		{
 			printf("%lld ms		philo %d is dead\n", set_time(philo), philo->p_list[i].id);
+			philo->finish = 0;
 			return ;
 		}
 		i++;
@@ -122,9 +124,9 @@ int	main(int argc, char **argv)
 				make_mutex(&philo);
 				create_philos(&philo);
 				check_meals(&philo);
-				is_dead(&philo);
+				is_dead(&philo);				
 				pthread_mutex_lock(&philo.print);
-				usleep(1000000);
+				usleep(500000);
 				free_destroy(&philo);
 			}
 		}
@@ -132,4 +134,3 @@ int	main(int argc, char **argv)
 	else
 		ft_putstr_fd(RED "Wrong number of arguments\n" reset, 2);
 }
- 
