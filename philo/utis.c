@@ -14,90 +14,58 @@
 
 void	ft_printf(char *mess, long long time, int id, t_prm *philo)
 {
-		pthread_mutex_lock(&philo->print);
-		printf(mess, time, id);
-		pthread_mutex_unlock(&philo->print);
+	pthread_mutex_lock(&philo->print);
+	printf(mess, time, id);
+	pthread_mutex_unlock(&philo->print);
 }
 
 void	check_meals(t_prm *philo)
 {
 	if (philo->m_eat < INT_MAX)
 	{
-		while (philo->finish)
+		while (philo->end)
 		{
 			if (philo->finished_eating == philo->n_philo)
-				philo->finish = 0;
+				philo->end = 0;
 		}
 	}
-}
-
-int	check_info(t_prm philo)
-{
-	if (philo.n_philo < 0 || philo.die < 0
-		|| philo.eat < 0 || philo.sleep < 0 || philo.m_eat < 0)
-	{
-		printf(RED "invalid parameters\n" reset);
-		return (0);
-	}
-	return (1);
-}
-
-int	check_is_digit(char **argv, int argc)
-{
-	int	j;
-	int	i;
-
-	i = 1;
-	while (i < argc)
-	{
-		j = 0;
-		while (argv[i][j])
-		{
-			if (ft_isalpha(argv[i][j]))
-			{
-				printf(RED"Non digit parameter\n"reset);
-				return (0);
-			}
-			j++;
-		}
-		i++;
-	}
-	return (1);
 }
 
 int	time_parm(char **argv, int argc, t_prm *philo)
 {
 	philo->p_list = NULL;
-
 	philo->m_eat = INT_MAX;
-
-	philo->finish = 1;
-
+	philo->end = 1;
 	if (!check_is_digit(argv, argc))
 		return (0);
 	philo->die = ft_atoi(argv[2]);
 	philo->eat = ft_atoi(argv[3]);
 	philo->sleep = ft_atoi(argv[4]);
-
-	if (argc == 6)
+	if (argc == 6 && ft_atoi(argv[5]) > 0)
 		philo->m_eat = ft_atoi(argv[5]);
 	philo->n_philo = ft_atoi(argv[1]);
 	return (1);
 }
 
-void	free_destroy(t_prm *philo)
+void	ft_eat(t_list *philo)
 {
-	int	i;
-
-	i = 0;
-	while (i < philo->n_philo)
+	pthread_mutex_lock(&(philo->fork[philo->id - 1]));
+	ft_printf("%lld ms		philo %d has taken a fork\n",
+		set_time(philo->info), philo->id, philo->info);
+	pthread_mutex_lock(&(philo->fork[philo->id % philo->info->n_philo]));
+	ft_printf("%lld ms		philo %d has taken a fork\n",
+		set_time(philo->info), philo->id, philo->info);
+	ft_printf("%lld ms		philo %d is eating\n",
+		set_time(philo->info), philo->id, philo->info);
+	philo->last_meal = set_time(philo->info);
+	philo->n_eat++;
+	if (philo->n_eat == philo->info->m_eat)
 	{
-		pthread_mutex_destroy(&philo->fork[i]);
-		i++;
+		pthread_mutex_lock(&philo->info->meal);
+		philo->info->finished_eating++;
+		pthread_mutex_unlock(&philo->info->meal);
 	}
-	pthread_mutex_destroy(&philo->print);
-	free(philo->fork);
-	// free(philo->p_list);
+	sleepi(philo->info->eat);
 }
 
 void	sleepi(int x)

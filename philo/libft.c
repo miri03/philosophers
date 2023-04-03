@@ -28,9 +28,13 @@ void	ft_putstr_fd(char *s, int fd)
 		write(fd, s, ft_strlen(s));
 }
 
-int	ft_isalpha(int c)
+int	check_info(t_prm philo)
 {
-	if ((c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z'))
-		return (1);
-	return (0);
+	if (philo.n_philo < 0 || philo.die < 0
+		|| philo.eat < 0 || philo.sleep < 0 || philo.m_eat < 0)
+	{
+		printf(RED "invalid parameters\n" RESET);
+		return (0);
+	}
+	return (1);
 }

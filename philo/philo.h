@@ -18,24 +18,21 @@
 # include <stdlib.h>
 # include <sys/time.h>
 # include <unistd.h>
-#include <limits.h>
+# include <limits.h>
 
-#define RED "\e[0;31m"
-#define reset "\e[0m"
+# define RED "\e[0;31m"
+# define RESET "\e[0m"
 
-typedef struct s_philo t_prm;
+typedef struct s_philo	t_prm;
 
 typedef struct s_list
 {
-	int			id;
-	pthread_t	thread_id;
-	int			n_eat;
-	long long	last_meal;
-	t_prm		*info;
+	int				id;
+	pthread_t		thread_id;
+	int				n_eat;
+	long long		last_meal;
+	t_prm			*info;
 	pthread_mutex_t	*fork;
-
-	
-
 }				t_list;
 
 typedef struct s_philo
@@ -48,13 +45,10 @@ typedef struct s_philo
 	t_list			*p_list;
 	pthread_mutex_t	*fork;
 	pthread_mutex_t	print;
-	pthread_mutex_t meal;
-
+	pthread_mutex_t	meal;
 	int				finished_eating;
-
-	int				finish;
-
-	long long	init;
+	int				end;
+	long long		init;
 
 }				t_prm;
 
@@ -67,6 +61,9 @@ void			ft_putstr_fd(char *s, int fd);
 int				ft_isalpha(int c);
 void			ft_printf( char *mess, long long time, int id, t_prm *philo);
 long long		set_time(t_prm *philo);
-long long		timer();
+long long		timer(void);
+void			ft_eat(t_list *philo);
 void			check_meals(t_prm *philo);
+int				check_is_digit(char **argv, int argc);
+
 #endif
