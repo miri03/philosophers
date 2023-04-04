@@ -19,7 +19,7 @@ void	*work(void *arg)
 	philo = (t_list *)arg;
 	if (philo->id % 2 == 0)
 		usleep(1000);
-	while (philo->info->end)
+	while (1)
 	{
 		ft_eat(philo);
 		ft_printf("%lld ms		philo %d finished eating\n",

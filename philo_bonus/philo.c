@@ -12,6 +12,27 @@
 
 #include "philo.h"
 
+void	work(t_prm *philo)
+{
+	
+}
+
+void	make_philos(t_prm *philo)
+{
+	int	*pid;
+	int	i;
+
+	i = 0;
+	pid = (int*)malloc(sizeof(int) * philo->n_philo);
+	while (i < philo->n_philo)
+	{
+		pid[i] = fork();
+		if (pid[i])
+			work(philo);
+		i++;
+	}
+}
+
 int main(int argc, char **argv)
 {
 	t_prm	philo;
@@ -22,4 +43,9 @@ int main(int argc, char **argv)
 		{
 			if (check_info(philo))
 			{
-				
+				make_philos(&philo);
+
+			}
+		}
+	}
+}
