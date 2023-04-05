@@ -51,6 +51,7 @@ int	time_parm(char **argv, int argc, t_prm *philo)
 	philo->p_list = NULL;
 	philo->m_eat = INT_MAX;
 	philo->end = 1;
+	philo->finished_eating = 0;
 	if (!check_is_digit(argv, argc))
 		return (0);
 	philo->die = ft_atoi(argv[2]);
@@ -62,4 +63,18 @@ int	time_parm(char **argv, int argc, t_prm *philo)
 	return (1);
 }
 
+long long	timer(void)
+{
+	struct timeval	time;
 
+	gettimeofday(&time, NULL);
+	return (time.tv_sec * 1000 + time.tv_usec / 1000);
+}
+
+long long	set_time(t_prm *philo)
+{
+	long long	now;
+
+	now = timer();
+	return (now - philo->init);
+}
