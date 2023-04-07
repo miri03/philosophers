@@ -6,11 +6,12 @@
 /*   By: meharit <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/03 11:58:14 by meharit           #+#    #+#             */
-/*   Updated: 2023/04/07 05:51:43 by meharit          ###   ########.fr       */
+/*   Updated: 2023/04/07 21:55:22 by meharit          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
+#include <sys/semaphore.h>
 
 void	*check_death(void *arg)
 {
@@ -19,13 +20,14 @@ void	*check_death(void *arg)
 	philo = (t_list *)arg;
 	while (1)
 	{
-		// printf("++++++++++++++++++++++++++++%d\n", philo->id);
-		if (timer() - philo->info->die > philo->last_meal)
+		sem_wait(philo->info->death);
+		if (set_time(philo->info->init) - philo->info->die > philo->last_meal)
 		{
+			sem_post(philo->info->death);
 			printf("-----------DEAD----------\n");
-			ft_printf("%lld ms philo %d is dead\n", set_time(philo->info->init), philo->id, philo->info);
-			exit (0);
+			exit (philo->id);
 		}
+		sem_post(philo->info->death);
 		usleep(1000);
 	}
 	return (NULL);
@@ -33,12 +35,14 @@ void	*check_death(void *arg)
 
 void	work(t_list *philo)
 {
-	// pthread_t	t1;
+	pthread_t	t1;
 
 	if (philo->id % 2 == 0)
 		usleep(1000);
-	// pthread_create(&t1, NULL, check_death, &philo);
 
+	sem_wait(philo->info->death);
+	pthread_create(&t1, NULL, check_death, philo);
+	sem_post(philo->info->death);
 	while (1)
 	{
 		sem_wait(philo->info->forks);
@@ -47,6 +51,8 @@ void	work(t_list *philo)
 		ft_printf("%lld ms philo %d has taken a fork\n", set_time(philo->i_init), philo->id, philo->info);
 		ft_printf("%lld ms philo %d is eating\n", set_time(philo->i_init), philo->id, philo->info);
 		philo->last_meal = set_time(philo->info->init);
+
+		// printf("++++++++++++++++++++++++++++%p\n", &philo->last_meal);
 		philo->n_eat++;
 		if (philo->n_eat == philo->info->m_eat)
 		{
@@ -63,7 +69,7 @@ void	work(t_list *philo)
 		usleep(philo->info->sleep * 1000);
 		ft_printf("%lld ms philo %d is thinking\n", set_time(philo->i_init), philo->id, philo->info);
 	}
-	// pthread_join(t1, NULL);
+	pthread_join(t1, NULL);
 }
 
 void	make_philos(t_prm *philo)
@@ -81,6 +87,7 @@ void	make_philos(t_prm *philo)
 	philo->forks = sem_open("forks", O_CREAT, 0644, philo->n_philo);
 	philo->print = sem_open("print", O_CREAT, 0644, 1);
 	philo->meal = sem_open("meal", O_CREAT, 0644, 1);
+	philo->death = sem_open("death", O_CREAT, 0644, 1);
 	///////////////////////////////////////
 
 	while (i < philo->n_philo)
@@ -110,34 +117,35 @@ void	make_philos(t_prm *philo)
 		}
 		i++;
 	}
-	i = 0;
+	/* i = 0;
 	while (i < philo->n_philo)
 	{
 		waitpid(pid[i], NULL, 0);
 		i++;
-	}
+	} */
 
-	// int g;
-	// waitpid(-1, &g, 0);
-	// //printf("---->%d\n", WEXITSTATUS(g));
-	// if (!WEXITSTATUS(g))
-	// {
-	// 	i = 0;
-	// 	while (i < philo->n_philo)
-	// 	{
-	// 		waitpid(-1, &g, 0);
-	// 		//printf("---->%d\n", WEXITSTATUS(g));
-	// 		if (WEXITSTATUS(g))
-	// 			break;
-	// 		i++;
-	// 	}
-	// }
-	// if (WEXITSTATUS(g))
-	// {
-	// 	i = 0;
-	// 	while (i < philo->n_philo)
-	// 		kill(pid[i++], SIGKILL);
-	// }
+	int g;
+	waitpid(-1, &g, 0);
+	//printf("---->%d\n", WEXITSTATUS(g));
+	if (!WEXITSTATUS(g))
+	{
+		i = 0;
+		while (i < philo->n_philo)
+		{
+			waitpid(-1, &g, 0);
+			//printf("---->%d\n", WEXITSTATUS(g));
+			if (WEXITSTATUS(g))
+				break;
+			i++;
+		}
+	}
+	if (WEXITSTATUS(g))
+	{
+		i = 0;
+		ft_printf("%lld ms philo %d is dead\n", set_time(philo->init), WEXITSTATUS(g), philo);
+		while (i < philo->n_philo)
+			kill(pid[i++], SIGKILL);
+	}
 }
 
 int main(int argc, char **argv)
@@ -146,6 +154,7 @@ int main(int argc, char **argv)
 
 	if (argc == 5 || argc == 6)
 	{
+		sem_unlink("death");
 		sem_unlink("forks");
 		sem_unlink("print");
 		sem_unlink("meal");
@@ -161,4 +170,6 @@ int main(int argc, char **argv)
 			}
 		}
 	}
+	else
+		ft_putstr_fd(RED "Wrong number of arguments\n" RESET, 2);
 }

@@ -6,7 +6,7 @@
 /*   By: meharit <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/03 11:58:37 by meharit           #+#    #+#             */
-/*   Updated: 2023/04/07 02:54:51 by meharit          ###   ########.fr       */
+/*   Updated: 2023/04/07 20:57:09 by meharit          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,9 +46,12 @@ typedef struct s_philo
 	int				sleep;
 	int				m_eat;
 	t_list			*p_list;
+
 	sem_t			*forks;
 	sem_t			*print;
 	sem_t			*meal;
+	sem_t			*death;
+
 	int				finished_eating;
 	int				end;
 	long long		init;

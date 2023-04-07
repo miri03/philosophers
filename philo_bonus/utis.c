@@ -6,12 +6,11 @@
 /*   By: meharit <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/03 12:04:44 by meharit           #+#    #+#             */
-/*   Updated: 2023/04/07 02:55:45 by meharit          ###   ########.fr       */
+/*   Updated: 2023/04/07 21:53:38 by meharit          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
-#include <stdio.h>
 
 int	check_is_digit(char **argv, int argc)
 {
@@ -38,8 +37,8 @@ int	check_is_digit(char **argv, int argc)
 
 int	check_info(t_prm philo)
 {
-	if (philo.n_philo < 0 || philo.die < 0
-		|| philo.eat < 0 || philo.sleep < 0 || philo.m_eat < 0)
+	if (philo.n_philo <= 0 || philo.die < 0
+		|| philo.eat <= 0 || philo.sleep <= 0 || philo.m_eat == INT_MAX)
 	{
 		printf(RED "invalid parameters\n" RESET);
 		return (0);
