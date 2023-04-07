@@ -6,11 +6,12 @@
 /*   By: meharit <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/03 12:04:44 by meharit           #+#    #+#             */
-/*   Updated: 2023/04/03 12:06:58 by meharit          ###   ########.fr       */
+/*   Updated: 2023/04/07 02:55:45 by meharit          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
+#include <stdio.h>
 
 int	check_is_digit(char **argv, int argc)
 {
@@ -59,7 +60,8 @@ int	time_parm(char **argv, int argc, t_prm *philo)
 	philo->sleep = ft_atoi(argv[4]);
 	if (argc == 6 && ft_atoi(argv[5]) > 0)
 		philo->m_eat = ft_atoi(argv[5]);
-	philo->n_philo = ft_atoi(argv[1]);
+	philo->n_philo = ft_atoi(argv[1]);	
+	philo->init = timer();
 	return (1);
 }
 
@@ -71,10 +73,11 @@ long long	timer(void)
 	return (time.tv_sec * 1000 + time.tv_usec / 1000);
 }
 
-long long	set_time(t_prm *philo)
+long long	set_time(long long init)
 {
 	long long	now;
 
 	now = timer();
-	return (now - philo->init);
+	// printf("------------%lld-------------\n", init);
+	return (now - init);
 }

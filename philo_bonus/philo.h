@@ -6,7 +6,7 @@
 /*   By: meharit <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/03 11:58:37 by meharit           #+#    #+#             */
-/*   Updated: 2023/04/03 12:12:04 by meharit          ###   ########.fr       */
+/*   Updated: 2023/04/07 02:54:51 by meharit          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,7 @@
 # include <unistd.h>
 # include <limits.h>
 # include <semaphore.h>
+# include <signal.h>
 
 # define RED "\e[0;31m"
 # define RESET "\e[0m"
@@ -32,6 +33,8 @@ typedef struct s_list
 	pthread_t		thread_id;
 	int				n_eat;
 	long long		last_meal;
+	int				i_die;
+	long long		i_init;
 	t_prm			*info;
 }				t_list;
 
@@ -58,7 +61,7 @@ void		ft_putstr_fd(char *s, int fd);
 int			check_info(t_prm philo);
 int			time_parm(char **argv, int argc, t_prm *philo);
 int			ft_isalpha(int c);
-long long	set_time(t_prm *philo);
+long long	set_time(long long init);
 long long	timer(void);
 void		ft_printf(char *mess, long long time, int id, t_prm *philo);
 

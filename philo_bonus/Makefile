@@ -6,7 +6,7 @@
 #    By: meharit <marvin@42.fr>                     +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/03/01 14:28:00 by meharit           #+#    #+#              #
-#    Updated: 2023/03/22 15:42:14 by meharit          ###   ########.fr        #
+#    Updated: 2023/04/07 05:23:59 by meharit          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -31,7 +31,7 @@ $(NAME) : $(OFILES)
 	cc -lpthread $(CFLAGS) $(OFILES) -o $(NAME)
 
 debug: $(OFILES) 
-	cc -lpthread -g -fsanitize=thread  $(CFLAGS) $(OFILES) -o $(NAME)
+	cc -lpthread -g3 -fsanitize=thread $(CFLAGS) $(OFILES) -o $(NAME)
 
 clean:
 	$(RM) $(OFILES)
