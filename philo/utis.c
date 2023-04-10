@@ -19,18 +19,6 @@ void	ft_printf(char *mess, long long time, int id, t_prm *philo)
 	pthread_mutex_unlock(&philo->print);
 }
 
-void	check_meals(t_prm *philo)
-{
-	if (philo->m_eat < INT_MAX && philo->n_philo > 1)
-	{
-		while (philo->end)
-		{
-			if (philo->finished_eating == philo->n_philo)
-				philo->end = 0;
-		}
-	}
-}
-
 int	time_parm(char **argv, int argc, t_prm *philo)
 {
 	philo->p_list = NULL;

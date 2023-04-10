@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "philo.h"
+#include "philo_bonus.h"
 
 void	*check_death(void *arg)
 {
@@ -30,12 +30,12 @@ void	ft_eat(t_list *philo)
 {
 	sem_wait(philo->info->forks);
 	ft_printf("%lld ms philo %d has taken a fork\n",
-		set_time(philo->info), philo->id, philo->info);
+		set_time(philo->info), philo->id);
 	sem_wait(philo->info->forks);
 	ft_printf("%lld ms philo %d has taken a fork\n",
-		set_time(philo->info), philo->id, philo->info);
+		set_time(philo->info), philo->id);
 	ft_printf("%lld ms philo %d is eating\n",
-		set_time(philo->info), philo->id, philo->info);
+		set_time(philo->info), philo->id);
 	philo->last_meal = set_time(philo->info);
 	philo->n_eat++;
 	usleep(philo->info->eat * 1000);
@@ -54,10 +54,10 @@ void	work(t_list *philo)
 	{
 		ft_eat(philo);
 		ft_printf("%lld ms philo %d is sleeping\n",
-			set_time(philo->info), philo->id, philo->info);
+			set_time(philo->info), philo->id);
 		usleep(philo->info->sleep * 1000);
 		ft_printf("%lld ms philo %d is thinking\n",
-			set_time(philo->info), philo->id, philo->info);
+			set_time(philo->info), philo->id);
 	}
 	pthread_join(t1, NULL);
 }
@@ -76,9 +76,9 @@ void	make_philos(t_prm *philo)
 		exit (1);
 	philo->init = timer();
 	make_semaphores(philo);
+	init(philo);
 	while (i < philo->n_philo)
 	{
-		init(philo);
 		pid[i] = fork();
 		if (pid[i] == 0)
 		{	

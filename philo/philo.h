@@ -66,7 +66,6 @@ void			ft_printf( char *mess, long long time, int id, t_prm *philo);
 long long		set_time(t_prm *philo);
 long long		timer(void);
 void			ft_eat(t_list *philo);
-void			check_meals(t_prm *philo);
 int				check_is_digit(char **argv, int argc);
 
 #endif

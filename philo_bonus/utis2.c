@@ -10,27 +10,11 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "philo.h"
+#include "philo_bonus.h"
 
-int	ft_strcmp(char *s1, char *s2)
+void	ft_printf(char *mess, long long time, int id)
 {
-	int	count;
-
-	count = 0;
-	while (s1[count] != '\0' || s2[count] != '\0')
-	{
-		if (s1[count] != s2[count])
-			return (s1[count] - s2[count]);
-		count++;
-	}
-	return (0);
-}
-
-void	ft_printf(char *mess, long long time, int id, t_prm *philo)
-{
-	sem_wait(philo->print);
 	printf(mess, time, id);
-	sem_post(philo->print);
 }
 
 void	init(t_prm *philo)
@@ -74,7 +58,7 @@ void	ft_wait(t_prm *philo, int *pid)
 	{
 		i = 0;
 		ft_printf("%lld ms philo %d is dead\n",
-			set_time(philo), WEXITSTATUS(g), philo);
+			set_time(philo), WEXITSTATUS(g));
 		while (i < philo->n_philo)
 			kill(pid[i++], SIGKILL);
 	}

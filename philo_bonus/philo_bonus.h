@@ -10,8 +10,8 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef PHILO_H
-# define PHILO_H
+#ifndef PHILO_BONUS_H
+# define PHILO_BONUS_H
 
 # include <stdio.h>
 # include <pthread.h>
@@ -63,7 +63,7 @@ int			time_parm(char **argv, int argc, t_prm *philo);
 int			ft_isalpha(int c);
 long long	set_time(t_prm *philo);
 long long	timer(void);
-void		ft_printf(char *mess, long long time, int id, t_prm *philo);
+void		ft_printf(char *mess, long long time, int id);
 void		ft_wait(t_prm *philo, int *pid);
 void		make_semaphores(t_prm *philo);
 void		init(t_prm *philo);

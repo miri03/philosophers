@@ -90,6 +90,11 @@ void	is_dead(t_prm *philo)
 	i = 0;
 	while (philo->end)
 	{
+		if (philo->m_eat < INT_MAX && philo->n_philo > 1)
+		{
+			if (philo->finished_eating == philo->n_philo)
+				philo->end = 0;
+		}
 		if (i == philo->n_philo)
 			i = 0;
 		if (set_time(philo) - philo->die > philo->p_list[i].last_meal)
@@ -117,7 +122,6 @@ int	main(int argc, char **argv)
 					return (FAIL);
 				if (create_philos(&philo) == FAIL)
 					return (FAIL);
-				check_meals(&philo);
 				is_dead(&philo);
 				pthread_mutex_lock(&philo.print);
 				usleep(500000);
