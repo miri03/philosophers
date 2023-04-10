@@ -22,8 +22,6 @@ void	*work(void *arg)
 	while (1)
 	{
 		ft_eat(philo);
-		ft_printf("%lld ms		philo %d finished eating\n",
-			set_time(philo->info), philo->id, philo->info);
 		pthread_mutex_unlock(&(philo->fork[philo->id - 1]));
 		pthread_mutex_unlock(&(philo->fork[philo->id % philo->info->n_philo]));
 		ft_printf("%lld ms		philo %d is sleeping\n",
