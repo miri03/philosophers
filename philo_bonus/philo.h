@@ -6,7 +6,7 @@
 /*   By: meharit <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/03 11:58:37 by meharit           #+#    #+#             */
-/*   Updated: 2023/04/07 20:57:09 by meharit          ###   ########.fr       */
+/*   Updated: 2023/04/09 21:13:43 by meharit          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,6 @@ typedef struct s_list
 	int				n_eat;
 	long long		last_meal;
 	int				i_die;
-	long long		i_init;
 	t_prm			*info;
 }				t_list;
 
@@ -49,8 +48,6 @@ typedef struct s_philo
 
 	sem_t			*forks;
 	sem_t			*print;
-	sem_t			*meal;
-	sem_t			*death;
 
 	int				finished_eating;
 	int				end;
@@ -64,8 +61,11 @@ void		ft_putstr_fd(char *s, int fd);
 int			check_info(t_prm philo);
 int			time_parm(char **argv, int argc, t_prm *philo);
 int			ft_isalpha(int c);
-long long	set_time(long long init);
+long long	set_time(t_prm *philo);
 long long	timer(void);
 void		ft_printf(char *mess, long long time, int id, t_prm *philo);
+void		ft_wait(t_prm *philo, int *pid);
+void		make_semaphores(t_prm *philo);
+void		init(t_prm *philo);
 
 #endif

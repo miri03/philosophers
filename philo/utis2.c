@@ -6,7 +6,7 @@
 /*   By: meharit <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/03 12:10:04 by meharit           #+#    #+#             */
-/*   Updated: 2023/04/03 12:10:08 by meharit          ###   ########.fr       */
+/*   Updated: 2023/04/08 05:09:17 by meharit          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,24 @@ long long	set_time(t_prm *philo)
 
 	now = timer();
 	return (now - philo->init);
+}
+
+void	sleepi(int x)
+{
+	struct timeval	start;
+	struct timeval	end;
+	int				time;
+
+	gettimeofday(&start, NULL);
+	while (1)
+	{
+		usleep(100);
+		gettimeofday(&end, NULL);
+		time = (end.tv_sec * 1000 + end.tv_usec / 1000) - (start.tv_sec * 1000
+				+ start.tv_usec / 1000);
+		if (x <= time)
+			break ;
+	}
 }
 
 void	free_destroy(t_prm *philo)

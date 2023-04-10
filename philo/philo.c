@@ -6,7 +6,7 @@
 /*   By: meharit <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/27 21:05:17 by meharit           #+#    #+#             */
-/*   Updated: 2023/03/23 15:28:37 by meharit          ###   ########.fr       */
+/*   Updated: 2023/04/09 19:48:55 by meharit          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,14 +35,17 @@ void	*work(void *arg)
 	return (NULL);
 }
 
-void	create_philos(t_prm *philo)
+int	create_philos(t_prm *philo)
 {
 	int	i;
 
 	i = 0;
 	philo->p_list = malloc(sizeof(t_list) * philo->n_philo);
 	if (philo->p_list == NULL)
-		printf("failed to allocet for philos\n");
+	{
+		printf("failed to allocate for philos\n");
+		return (FAIL);
+	}
 	philo->init = timer();
 	while (i < philo->n_philo)
 	{
@@ -57,9 +60,10 @@ void	create_philos(t_prm *philo)
 		usleep(100);
 		i++;
 	}
+	return (SUCESS);
 }
 
-void	make_mutex(t_prm *philo)
+int	make_mutex(t_prm *philo)
 {
 	int	i;
 
@@ -67,12 +71,18 @@ void	make_mutex(t_prm *philo)
 	pthread_mutex_init(&philo->print, NULL);
 	pthread_mutex_init(&philo->meal, NULL);
 	philo->fork = malloc(sizeof(pthread_mutex_t) * philo->n_philo);
+	if (philo->fork == NULL)
+	{
+		printf("failed to allocate for philos\n");
+		return (FAIL);
+	}
 	while (i < philo->n_philo)
 	{
 		if (pthread_mutex_init(&(philo->fork[i]), NULL) == -1)
 			printf("mutex init has failed\n");
 		i++;
 	}
+	return (SUCESS);
 }
 
 void	is_dead(t_prm *philo)
@@ -105,8 +115,10 @@ int	main(int argc, char **argv)
 		{
 			if (check_info(philo))
 			{
-				make_mutex(&philo);
-				create_philos(&philo);
+				if (make_mutex(&philo) == FAIL)
+					return (FAIL);
+				if (create_philos(&philo) == FAIL)
+					return (FAIL);
 				check_meals(&philo);
 				is_dead(&philo);
 				pthread_mutex_lock(&philo.print);

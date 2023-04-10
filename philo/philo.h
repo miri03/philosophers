@@ -6,7 +6,7 @@
 /*   By: meharit <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/27 21:07:34 by meharit           #+#    #+#             */
-/*   Updated: 2023/03/22 17:18:04 by meharit          ###   ########.fr       */
+/*   Updated: 2023/04/08 20:11:01 by meharit          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,9 @@
 
 # define RED "\e[0;31m"
 # define RESET "\e[0m"
+
+# define FAIL 1
+# define SUCESS 0
 
 typedef struct s_philo	t_prm;
 
