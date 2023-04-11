@@ -25,14 +25,10 @@ void	*work(void *arg)
 		pthread_mutex_unlock(&(philo->fork[philo->id - 1]));
 		pthread_mutex_unlock(&(philo->fork[philo->id % philo->info->n_philo]));
 		ft_printf("%lld ms		philo %d is sleeping\n",
-					set_time(philo->info),
-					philo->id,
-					philo->info);
+			set_time(philo->info), philo->id, philo->info);
 		sleepi(philo->info->sleep);
 		ft_printf("%lld ms		philo %d is thinking\n",
-					set_time(philo->info),
-					philo->id,
-					philo->info);
+			set_time(philo->info), philo->id, philo->info);
 	}
 	return (NULL);
 }
@@ -56,8 +52,8 @@ int	create_philos(t_prm *philo)
 		philo->p_list[i].id = i + 1;
 		philo->p_list[i].info = philo;
 		philo->p_list[i].fork = philo->fork;
-		pthread_create(&(philo->p_list[i].thread_id), NULL, work,
-				&philo->p_list[i]);
+		pthread_create(&(philo->p_list[i].thread_id), NULL,
+			work, &philo->p_list[i]);
 		pthread_detach(philo->p_list[i].thread_id);
 		usleep(100);
 		i++;
@@ -94,23 +90,15 @@ void	is_dead(t_prm *philo)
 	i = 0;
 	while (philo->end)
 	{
-		if (philo->m_eat < INT_MAX && philo->n_philo > 1)
-		{
-			if (philo->finished_eating == philo->n_philo)
-			{
-				philo->end = 0;
-				pthread_mutex_lock(&philo->print);
-				break ;
-			}
-		}
+		if (!must_eat(philo))
+			break ;
 		if (i == philo->n_philo)
 			i = 0;
 		if (set_time(philo) - philo->die > philo->p_list[i].last_meal)
 		{
 			pthread_mutex_lock(&philo->print);
 			printf("%lld ms		philo %d is dead\n",
-					set_time(philo),
-					philo->p_list[i].id);
+				set_time(philo), philo->p_list[i].id);
 			philo->end = 0;
 			return ;
 		}
@@ -128,7 +116,6 @@ int	main(int argc, char **argv)
 		{
 			if (check_info(philo))
 			{
-				printf("---------%d\n", philo.m_eat);
 				if (make_mutex(&philo) == FAIL)
 					return (FAIL);
 				if (create_philos(&philo) == FAIL)

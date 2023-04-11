@@ -30,7 +30,7 @@ int	check_is_digit(char **argv, int argc)
 			if (!ft_isdigit2(argv[i][j], d))
 			{
 				printf(RED "Non digit parameter\n" RESET);
-				return (0);				
+				return (0);
 			}
 			j++;
 		}

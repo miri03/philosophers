@@ -30,7 +30,6 @@ void	ft_putstr_fd(char *s, int fd)
 
 int	ft_isdigit2(int c, int d)
 {
-	
 	if (c >= '0' && c <= '9')
 		return (1);
 	if (d == 0 && (c == '+' || c == '-'))

@@ -30,7 +30,7 @@ OFILES = philo.o \
 all: $(NAME)
 
 $(NAME) : $(OFILES)
-	cc -lpthread -fsanitize=thread -g3 $(CFLAGS) $(OFILES) -o $(NAME)
+	cc -lpthread $(CFLAGS) $(OFILES) -o $(NAME)
 
 clean:
 	$(RM) $(OFILES)

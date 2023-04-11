@@ -14,11 +14,24 @@
 
 void	ft_printf(char *mess, long long time, int id, t_prm *philo)
 {
-
 	pthread_mutex_lock(&philo->print);
-	if (philo->end)	
+	if (philo->end)
 		printf(mess, time, id);
 	pthread_mutex_unlock(&philo->print);
+}
+
+int	must_eat(t_prm *philo)
+{
+	if (philo->m_eat < INT_MAX && philo->n_philo > 1)
+	{
+		if (philo->finished_eating == philo->n_philo)
+		{
+			philo->end = 0;
+			pthread_mutex_lock(&philo->print);
+			return (0);
+		}
+	}
+	return (1);
 }
 
 int	time_parm(char **argv, int argc, t_prm *philo)
