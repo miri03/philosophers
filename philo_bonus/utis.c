@@ -16,6 +16,7 @@ int	check_is_digit(char **argv, int argc)
 {
 	int	j;
 	int	i;
+	int	d;
 
 	i = 1;
 	while (i < argc)
@@ -23,25 +24,17 @@ int	check_is_digit(char **argv, int argc)
 		j = 0;
 		while (argv[i][j])
 		{
-			if (ft_isalpha(argv[i][j]))
+			d = -1;
+			if (j == 0)
+				d = 0;
+			if (!ft_isdigit2(argv[i][j], d))
 			{
 				printf(RED "Non digit parameter\n" RESET);
-				return (0);
+				return (0);				
 			}
 			j++;
 		}
 		i++;
-	}
-	return (1);
-}
-
-int	check_info(t_prm philo)
-{
-	if (philo.n_philo <= 0 || philo.die <= 0
-		|| philo.eat <= 0 || philo.sleep <= 0 || philo.m_eat <= 0)
-	{
-		printf(RED "invalid parameters\n" RESET);
-		return (0);
 	}
 	return (1);
 }
@@ -63,6 +56,17 @@ int	time_parm(char **argv, int argc, t_prm *philo)
 		philo->m_eat = INT_MAX;
 	philo->n_philo = ft_atoi(argv[1]);
 	philo->init = timer();
+	return (1);
+}
+
+int	check_info(t_prm philo)
+{
+	if (philo.n_philo <= 0 || philo.die <= 0
+		|| philo.eat <= 0 || philo.sleep <= 0 || philo.m_eat <= 0)
+	{
+		printf(RED "invalid parameters\n" RESET);
+		return (0);
+	}
 	return (1);
 }
 

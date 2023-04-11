@@ -27,3 +27,13 @@ void	ft_putstr_fd(char *s, int fd)
 	if (s != NULL && fd >= 0)
 		write(fd, s, ft_strlen(s));
 }
+
+int	ft_isdigit2(int c, int d)
+{
+	
+	if (c >= '0' && c <= '9')
+		return (1);
+	if (d == 0 && (c == '+' || c == '-'))
+		return (1);
+	return (0);
+}

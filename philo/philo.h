@@ -67,5 +67,7 @@ long long		set_time(t_prm *philo);
 long long		timer(void);
 void			ft_eat(t_list *philo);
 int				check_is_digit(char **argv, int argc);
+int				ft_isdigit(int c);
+int				ft_isdigit2(int c, int d);
 
 #endif

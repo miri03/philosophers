@@ -67,5 +67,6 @@ void		ft_printf(char *mess, long long time, int id);
 void		ft_wait(t_prm *philo, int *pid);
 void		make_semaphores(t_prm *philo);
 void		init(t_prm *philo);
+int			ft_isdigit2(int c, int d);
 
 #endif

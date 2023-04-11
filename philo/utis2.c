@@ -65,6 +65,7 @@ int	check_is_digit(char **argv, int argc)
 {
 	int	j;
 	int	i;
+	int	d;
 
 	i = 1;
 	while (i < argc)
@@ -72,10 +73,13 @@ int	check_is_digit(char **argv, int argc)
 		j = 0;
 		while (argv[i][j])
 		{
-			if (ft_isalpha(argv[i][j]))
+			d = -1;
+			if (j == 0)
+				d = 0;
+			if (!ft_isdigit2(argv[i][j], d))
 			{
 				printf(RED "Non digit parameter\n" RESET);
-				return (0);
+				return (0);				
 			}
 			j++;
 		}

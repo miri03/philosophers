@@ -51,6 +51,8 @@ void	ft_wait(t_prm *philo, int *pid)
 		while (i < philo->n_philo)
 		{
 			waitpid(-1, &g, 0);
+			if (WEXITSTATUS(g))
+				break ;
 			i++;
 		}
 	}
@@ -64,4 +66,14 @@ void	ft_wait(t_prm *philo, int *pid)
 	}
 	free(philo->p_list);
 	free(pid);
+}
+
+int	ft_isdigit2(int c, int d)
+{
+	
+	if (c >= '0' && c <= '9')
+		return (1);
+	if (d == 0 && (c == '+' || c == '-'))
+		return (1);
+	return (0);
 }

@@ -14,8 +14,10 @@
 
 void	ft_printf(char *mess, long long time, int id, t_prm *philo)
 {
+
 	pthread_mutex_lock(&philo->print);
-	printf(mess, time, id);
+	if (philo->end)	
+		printf(mess, time, id);
 	pthread_mutex_unlock(&philo->print);
 }
 
